@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.108.0">
+    <title>Cancelar Inscrição</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+
+    <!--<link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+    </style>
+
+    <!-- Custom styles for this template -->
+     {% load static %}
+    <link type="text/css" href="{% static 'signin.css' %}" rel="stylesheet">
+  </head>
+  <body class="text-center">
+    
+  <main class="form-signin w-100 m-auto">
+    <form>
+      {% load static %}
+      <img class="mb-4" src="{% static 'logo_ht.png' %}" alt="" width="80" height="">
+      <h1 class="h3 mb-3 fw-normal">Digite seu e-mail para cancelar a inscrição</h1>
+      <div class="form-floating">
+        <input type="email" class="form-control" id="email_addr" placeholder="name@example.com">
+        <label for="email_addr">Digite seu e-mail</label>
+      </div>
+      <br/>
+      <button class="w-100 btn btn-lg btn-primary" type="button" onclick="call_cancel()">Cancelar inscrição</button>
+    </form>
+    <h1 id="demo"></h1>
+  </main>
+  </body>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  async function call_cancel(){
+    console.log("Call Cancel")
+    const url = 'http://marketing.hidrotube.com.br/unsubscribe/'
+    const payload = {e_mail: document.getElementById('email_addr').value }
+    const response = await axios.put(url, payload)
+    alert(response.data)
+  }
+</script>
+</html>
