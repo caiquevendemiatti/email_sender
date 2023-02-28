@@ -120,10 +120,10 @@ class SendEmail:
             message.send()
             return True
         except SMTPException as e:
-            print('There was an error sending an email: ', e)
+            self.logger.debug('There was an error sending an email: ', e)
             return False
         except:
-            print("Unknown error sending email")
+            self.logger.debug("Unknown error sending email")
             return False
 
 
@@ -145,6 +145,7 @@ class SendEmail:
         Task_Envio.objects.filter(id__in=ids_to_update).update(tentativas_envio=F('tentativas_envio') + 1)
 
 def send_email():
-    print("SendEmail Func")
+    logger = logging.getLogger(__name__)
+    logger.debug("SendEmail Func")
     send_email = SendEmail()
     send_email.send_email_by_vendor()
