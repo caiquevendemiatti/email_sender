@@ -1,0 +1,11 @@
+[Unit]
+Description=A useful description to be shown in command-line tools
+
+[Service]
+Restart=on-failure
+EnvironmentFile=/etc/environment
+WorkingDirectory=/home/ubuntu/email_sender
+ExecStart=/home/ubuntu/email_sender/venv/bin/gunicorn --bind unix:/home/ubuntu/email_sender/email_sender.sock email_sender.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

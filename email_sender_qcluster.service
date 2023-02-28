@@ -1,0 +1,11 @@
+[Unit]
+Description=A useful description to be shown in command-line tools
+
+[Service]
+Restart=on-failure
+EnvironmentFile=/etc/environment
+WorkingDirectory=/home/ubuntu/email_sender
+ExecStart=/home/ubuntu/email_sender/venv/bin/python3 /home/ubuntu/email_sender/manage.py qcluster
+
+[Install]
+WantedBy=multi-user.target
