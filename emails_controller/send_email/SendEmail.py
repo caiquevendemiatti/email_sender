@@ -7,6 +7,8 @@ from django.utils.html import strip_tags
 from email.mime.image import MIMEImage
 from smtplib import SMTPException
 
+import logging
+
 from django.contrib.staticfiles import finders
 from functools import lru_cache
 
@@ -15,6 +17,8 @@ from emails_controller.models import Task_Envio, Contato, Colaborador
 class SendEmail:
     def __init__(self):
         self.email_block_len = 10
+        logger = logging.getLogger(__name__)
+        logger.debug("SEND E-MAIL CLASS")
 
     def create_email_task(self, task_name, subject):
         contact_list = Contato.objects.filter(ativo=True, excluido=False)
@@ -29,13 +33,14 @@ class SendEmail:
             task_envio.save()
 
     def send_email_by_vendor(self):
+        self.logger.debug(f"List vendors for sending e-mails")
         vendors = Colaborador.objects.filter(habilitado=True)
 
         for vendor in vendors:
             self.run_email_tasks('Tarefa teste', vendor)
 
     def run_email_tasks(self, task_name, vendor):
-        print(f"Run e-mail tasks {vendor.nome}")
+        self.logger.debug(f"Run e-mail tasks {vendor.nome}")
         subject = 'Hidrotube em Novo Endereço'
         from_email = settings.EMAIL_HOST_USER
         vendor_name = vendor.nome
@@ -44,7 +49,7 @@ class SendEmail:
         whatsapp = vendor.whatsapp
         ddd = vendor.ddd
 
-
+        self.logger.debug("Lista tarefas de envio pendentes")
         tasks = Task_Envio.objects.filter(enviado=False, tarefa=task_name, contato__colaborador_responsavel=vendor)
         to = []
         pk = []
@@ -64,7 +69,7 @@ class SendEmail:
 
             # When reached the number of contacts for a single e-mail proceed email send task
             if to_counter == max_tasks:
-                print(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
+                self.logger.debug(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
                 success = self.send_new_address(to, 'Tarefa Teste', ddd, whatsapp, vendor_name, vendor_email)
 
                 if success:
@@ -81,6 +86,7 @@ class SendEmail:
                 to = []
 
     def send_new_address(self, to, subject, ddd, whatsapp, vendor_name, vendor_email):
+        self.logger.debug("Send_new_address")
         from_email = settings.EMAIL_HOST_USER
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
