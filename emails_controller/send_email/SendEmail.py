@@ -117,15 +117,16 @@ class SendEmail:
         message.attach(self.img_data(
             '/home/ubuntu/email_sender/templates/images/logo_ht.png',
             '<image5>'))
-        try:
-            message.send()
-            return True
-        except SMTPException as e:
-            self.logger.debug('There was an error sending an email: ', e)
-            return False
-        except:
-            self.logger.debug("Unknown error sending email")
-            return False
+        message.send()
+        # try:
+        #     message.send()
+        #     return True
+        # except SMTPException as e:
+        #     self.logger.debug('There was an error sending an email: ', e)
+        #     return False
+        # except:
+        #     self.logger.debug("Unknown error sending email")
+        return False
 
 
     @staticmethod
