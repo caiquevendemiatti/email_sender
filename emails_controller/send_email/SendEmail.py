@@ -17,8 +17,8 @@ from emails_controller.models import Task_Envio, Contato, Colaborador
 class SendEmail:
     def __init__(self):
         self.email_block_len = 10
-        logger = logging.getLogger(__name__)
-        logger.debug("SEND E-MAIL CLASS")
+        self.logger = logging.getLogger(__name__)
+        self.logger.debug("SEND E-MAIL CLASS")
 
     def create_email_task(self, task_name, subject):
         contact_list = Contato.objects.filter(ativo=True, excluido=False)

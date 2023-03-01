@@ -183,13 +183,15 @@ REST_FRAMEWORK = {
 
 
 Q_CLUSTER = {
-    'name': 'myproject',
+    'name': 'email_sender',
     'workers': 8,
     'recycle': 500,
-    'timeout': 60,
+    'retry': 900,
+    'timeout': 900,
+    'max_attempts': 1,
     'compress': True,
     'cpu_affinity': 1,
-    'save_limit': 250,
+    'save_limit': 100,
     'queue_limit': 500,
     'label': 'Django Q',
     'redis': {
