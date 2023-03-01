@@ -37,9 +37,9 @@ class SendEmail:
         vendors = Colaborador.objects.filter(habilitado=True)
 
         for vendor in vendors:
-            self.run_email_tasks('Tarefa teste', vendor)
+            self.run_email_tasks(vendor)
 
-    def run_email_tasks(self, task_name, vendor):
+    def run_email_tasks(self, vendor):
         self.logger.debug(f"Run e-mail tasks {vendor.nome}")
         subject = 'Hidrotube em Novo Endereço'
         from_email = settings.EMAIL_HOST_USER
@@ -50,7 +50,8 @@ class SendEmail:
         ddd = vendor.ddd
 
         self.logger.debug("Lista tarefas de envio pendentes")
-        tasks = Task_Envio.objects.filter(enviado=False, tarefa=task_name, contato__colaborador_responsavel=vendor)
+        #TODO: Inserir limite no final da seleção de tarefas para evitar tempos de execução muito longos
+        tasks = Task_Envio.objects.filter(enviado=False, contato__colaborador_responsavel=vendor)
         to = []
         pk = []
         to_counter = 0
