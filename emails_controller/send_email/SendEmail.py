@@ -103,19 +103,19 @@ class SendEmail:
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data(
-            'email_sender/templates/images/logo_ht_grande.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         message.attach(self.img_data(
-            'email_sender/templates/images/gopr3487r.jpg',
+            '/home/ubuntu/email_sender/templates/images/gopr3487r.jpg',
             '<image2>'))
         message.attach(self.img_data(
-            'email_sender/templates/images/facebook-circle-colored.png',
+            '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
             '<image3>'))
         message.attach(self.img_data(
-            'email_sender/templates/images/instagram-circle-colored.png',
+            '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
             '<image4>'))
         message.attach(self.img_data(
-            'email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht.png',
             '<image5>'))
         try:
             message.send()
