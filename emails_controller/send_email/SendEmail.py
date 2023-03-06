@@ -99,7 +99,7 @@ class SendEmail:
         html_content = render_to_string('novo_endereco.html', add_content)
         text_content = strip_tags(html_content)
 
-        message = EmailMultiAlternatives(subject, text_content, from_email, bcc=to)
+        message = EmailMultiAlternatives(subject, text_content, f"Hidrotube - Marketing <{from_email}>", bcc=to)
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data(
