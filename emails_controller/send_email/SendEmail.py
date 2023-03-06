@@ -87,8 +87,8 @@ class SendEmail:
                 to = []
 
     def send_new_address(self, to, subject, ddd, whatsapp, vendor_name, vendor_email):
-        self.logger.debug("Send_new_address")
         from_email = settings.EMAIL_HOST_USER
+        #from_email = 'vendemiatticaique@gmail.com'
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         add_content = {'vendor_name': vendor_name,
@@ -99,33 +99,38 @@ class SendEmail:
         html_content = render_to_string('novo_endereco.html', add_content)
         text_content = strip_tags(html_content)
 
-        message = EmailMultiAlternatives(subject, text_content, f"Hidrotube - Marketing <{from_email}>", bcc=to)
+        message = EmailMultiAlternatives(subject, text_content, from_email, bcc=to)
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data(
+            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht_grande.png',
             '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         message.attach(self.img_data(
+            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
             '/home/ubuntu/email_sender/templates/images/gopr3487r.jpg',
             '<image2>'))
         message.attach(self.img_data(
+            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
             '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
             '<image3>'))
         message.attach(self.img_data(
+            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
             '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
             '<image4>'))
         message.attach(self.img_data(
+            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/ubuntu/email_sender/templates/images/logo_ht.png',
             '<image5>'))
-        message.send()
-        # try:
-        #     message.send()
-        #     return True
-        # except SMTPException as e:
-        #     self.logger.debug('There was an error sending an email: ', e)
-        #     return False
-        # except:
-        #     self.logger.debug("Unknown error sending email")
+
+        try:
+            message.send()
+            return True
+        except SMTPException as e:
+            self.logger.debug('There was an error sending an email: ', e)
+            return False
+        except:
+            self.logger.debug("Unknown error sending email")
         return False
 
 
