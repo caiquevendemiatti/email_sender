@@ -14,9 +14,10 @@ from functools import lru_cache
 
 from emails_controller.models import Task_Envio, Contato, Colaborador
 
+
 class SendEmail:
     def __init__(self):
-        self.email_block_len = 10
+        self.email_block_len = 1
         self.logger = logging.getLogger(__name__)
         self.logger.debug("SEND E-MAIL CLASS")
 
@@ -50,8 +51,10 @@ class SendEmail:
         ddd = vendor.ddd
 
         self.logger.debug("Lista tarefas de envio pendentes")
-        #TODO: Inserir limite no final da seleção de tarefas para evitar tempos de execução muito longos
-        tasks = Task_Envio.objects.filter(enviado=False, contato__colaborador_responsavel=vendor)
+
+        tasks = Task_Envio.objects.filter(enviado=False,
+                                          contato__colaborador_responsavel=vendor,
+                                          tentativas_envio__lt=2)
         to = []
         pk = []
         to_counter = 0
@@ -71,14 +74,14 @@ class SendEmail:
             # When reached the number of contacts for a single e-mail proceed email send task
             if to_counter == max_tasks:
                 self.logger.debug(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
-                success = self.send_new_address(to, 'Tarefa Teste', ddd, whatsapp, vendor_name, vendor_email)
+                success = self.send_new_address(to, subject, ddd, whatsapp, vendor_name, vendor_email)
 
                 if success:
                     self.mark_task_complete(pk)
                 else:
                     self.mark_task_error(pk)
 
-                # If the number of pending contacts is less then email block, reduce e-mail block
+                # If the number of pending contacts is less than email block, reduce e-mail block
                 if (tasks_len - sent) < max_tasks:
                     max_tasks = (tasks_len - sent)
 
@@ -88,7 +91,6 @@ class SendEmail:
 
     def send_new_address(self, to, subject, ddd, whatsapp, vendor_name, vendor_email):
         from_email = settings.EMAIL_HOST_USER
-        #from_email = 'vendemiatticaique@gmail.com'
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         add_content = {'vendor_name': vendor_name,
@@ -99,40 +101,53 @@ class SendEmail:
         html_content = render_to_string('novo_endereco.html', add_content)
         text_content = strip_tags(html_content)
 
-        message = EmailMultiAlternatives(subject, text_content, f"Hidrotube - Marketing <{from_email}>", bcc=to)
+        message = EmailMultiAlternatives(subject, text_content,
+                                         from_email=f"Hidrotube - Marketing <{from_email}>",
+                                         cc=to)
+
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data(
-            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht_grande.png',
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht_grande.png',
             '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         message.attach(self.img_data(
-            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
             '/home/ubuntu/email_sender/templates/images/gopr3487r.jpg',
             '<image2>'))
         message.attach(self.img_data(
-            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
             '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
             '<image3>'))
         message.attach(self.img_data(
-            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
             '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
             '<image4>'))
         message.attach(self.img_data(
-            #'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/ubuntu/email_sender/templates/images/logo_ht.png',
             '<image5>'))
 
         try:
-            message.send()
-            return True
+            result = message.send()
+            if result == 1:
+                return True
+            return False
         except SMTPException as e:
             self.logger.debug('There was an error sending an email: ', e)
             return False
-        except:
-            self.logger.debug("Unknown error sending email")
+        except Exception as error:
+            self.logger.debug(f"Unknown error sending email: {error}")
         return False
 
+    def deactivate_error_email(self):
+        tasks = Task_Envio.objects.filter(enviado=False, tentativas_envio__gte=2)
+
+        for task in tasks:
+            contato = task.contato
+            self.logger.debug(f"Desativando contato: {contato.razao_social}")
+            contato.ativo = False
+            contato.save()
 
     @staticmethod
     def img_data(path, cname):
@@ -156,3 +171,4 @@ def send_email():
     logger.debug("SendEmail Func")
     send_email = SendEmail()
     send_email.send_email_by_vendor()
+    send_email.deactivate_error_email()
