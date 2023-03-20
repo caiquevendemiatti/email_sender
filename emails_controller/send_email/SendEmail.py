@@ -17,7 +17,9 @@ from emails_controller.models import Task_Envio, Contato, Colaborador
 
 class SendEmail:
     def __init__(self):
-        self.email_block_len = 1
+        self.receivers_block_limit = 50
+        self.receivers_limit_hour = 900
+        self.receivers_count = 0
         self.logger = logging.getLogger(__name__)
         self.logger.debug("SEND E-MAIL CLASS")
 
@@ -38,41 +40,43 @@ class SendEmail:
         vendors = Colaborador.objects.filter(habilitado=True)
 
         for vendor in vendors:
-            self.run_email_tasks(vendor)
+            if self.receivers_count < self.receivers_limit_hour:
+                self.run_email_tasks(vendor)
 
     def run_email_tasks(self, vendor):
         self.logger.debug(f"Run e-mail tasks {vendor.nome}")
-        subject = 'Hidrotube em Novo Endereço'
-        from_email = settings.EMAIL_HOST_USER
+
+        subject = 'Hidrotube de casa nova'
         vendor_name = vendor.nome
         vendor_email = vendor.e_mail
-        max_tasks = self.email_block_len
         whatsapp = vendor.whatsapp
         ddd = vendor.ddd
 
-        self.logger.debug("Lista tarefas de envio pendentes")
+        max_receivers_by_message = self.receivers_block_limit
+        select_task_max_len = self.receivers_limit_hour - self.receivers_count
+
+        if select_task_max_len <= 0:
+            return
 
         tasks = Task_Envio.objects.filter(enviado=False,
                                           contato__colaborador_responsavel=vendor,
-                                          tentativas_envio__lt=2)
+                                          tentativas_envio__lt=2)[:select_task_max_len]
         to = []
         pk = []
         to_counter = 0
-        sent = 0
         tasks_len = len(tasks)
 
-        if tasks_len < max_tasks:
-            max_tasks = tasks_len
+        if tasks_len < max_receivers_by_message:
+            max_receivers_by_message = tasks_len
 
         for task in tasks:
-            to_counter = to_counter + 1  # Counters for triggering e-mail sending
-            sent = sent + 1
-
-            to.append(task.contato.e_mail)  # Gets the e-mail address for sending, and pk for updating DB
-            pk.append(task.pk)
+            self.receivers_count = self.receivers_count + 1
+            to_counter = to_counter + 1
+            to.append(task.contato.e_mail)
+            pk.append(task.contato.pk)
 
             # When reached the number of contacts for a single e-mail proceed email send task
-            if to_counter == max_tasks:
+            if to_counter == max_receivers_by_message:
                 self.logger.debug(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
                 success = self.send_new_address(to, subject, ddd, whatsapp, vendor_name, vendor_email)
 
@@ -81,9 +85,10 @@ class SendEmail:
                 else:
                     self.mark_task_error(pk)
 
-                # If the number of pending contacts is less than email block, reduce e-mail block
-                if (tasks_len - sent) < max_tasks:
-                    max_tasks = (tasks_len - sent)
+                # If the number of pending contacts is less than email max receivers by e-mail,
+                # reduce e-mail receivers number
+                if (tasks_len - to_counter) < max_receivers_by_message:
+                    max_receivers_by_message = (tasks_len - to_counter)
 
                 to_counter = 0
                 pk = []
