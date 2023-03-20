@@ -73,7 +73,7 @@ class SendEmail:
             self.receivers_count = self.receivers_count + 1
             to_counter = to_counter + 1
             to.append(task.contato.e_mail)
-            pk.append(task.contato.pk)
+            pk.append(task.pk)
 
             # When reached the number of contacts for a single e-mail proceed email send task
             if to_counter == max_receivers_by_message:
@@ -135,8 +135,10 @@ class SendEmail:
 
         try:
             result = message.send()
+
             if result == 1:
                 return True
+
             return False
         except SMTPException as e:
             self.logger.debug('There was an error sending an email: ', e)
