@@ -1,5 +1,9 @@
 from django.db import models
 import logging
+
+from django.db.models import BooleanField
+
+
 # Create your models here.
 class Colaborador(models.Model):
     nome = models.CharField(max_length=600, blank=False)
@@ -28,6 +32,84 @@ class Contato(models.Model):
     def __str__(self):
         return str(self.razao_social)
 
+class ConteudoEmail(models.Model):
+    assunto = models.CharField(max_length=255, blank=False, null=False)
+    cabecalho = models.CharField(max_length=255, blank=False, null=False)
+    rodape = models.CharField(max_length=255, blank=False, null=False)
+    conteudo_A = models.TextField(blank=False, null=False)
+    conteudo_B = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return str(f"{self.assunto}")
+
+
+class GeradorTarefas(models.Model):
+    todos_contatos = models.BooleanField(default=True, null=False, blank=False)
+    por_vendedor = models.BooleanField(default=True, null=False, blank=False)
+    vendedor = models.ForeignKey(Colaborador, on_delete=models.PROTECT, null=True, blank=True)
+    por_contato = models.BooleanField(default=False, null=False, blank=False)
+    contato = models.IntegerField(null=True, blank=True)
+    conteudo_email = models.ForeignKey(ConteudoEmail, on_delete=models.PROTECT)
+
+    def save(self, *args, **kwargs):
+        if self.todos_contatos:
+            super().save(*args, **kwargs)
+            self.create_task_all_contacts()
+            return
+
+        if self.por_vendedor:
+            if not self.vendedor:
+                raise Exception("O campo vendedor deve ser preenchido")
+                return
+            super().save(*args, **kwargs)
+            self.create_task_by_vendor()
+            return
+
+        if self.contato:
+            if not self.contato:
+                raise Exception("O campo contato deve ser preenchido")
+                return
+            super().save(*args, **kwargs)
+            self.create_task_by_contact()
+            return
+
+    def create_task_all_contacts(self):
+        contacts = Contato.objects.filter(ativo=True, excluido=False)
+        for contact in contacts:
+            task_envio = Task_Envio(
+                tarefa=self.pk,
+                assunto=self.conteudo_email.assunto,
+                contato=contact,
+                conteudo=self.conteudo_email,
+                enviado=False
+            )
+            task_envio.save()
+
+    def create_task_by_vendor(self):
+        contacts = Contato.objects.filter(ativo=True, excluido=False, colaborador_responsavel=self.vendedor)
+
+        for contact in contacts:
+            task_envio = Task_Envio(
+                tarefa=self.pk,
+                assunto=self.conteudo_email.assunto,
+                contato=contact,
+                conteudo=self.conteudo_email,
+                enviado=False
+            )
+            task_envio.save()
+
+    def create_task_by_contact(self):
+        contact = Contato.objects.get(pk=self.contato)
+
+        task_envio = Task_Envio(
+            tarefa=self.pk,
+            assunto=self.conteudo_email.assunto,
+            contato=contact,
+            conteudo=self.conteudo_email,
+            enviado=False
+        )
+        task_envio.save()
+
 
 class Task_Envio(models.Model):
     tarefa = models.CharField(max_length=255, blank=False, null=False)
@@ -35,6 +117,7 @@ class Task_Envio(models.Model):
     contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
     enviado = models.BooleanField(default=False)
     tentativas_envio = models.IntegerField(default=0)
+    conteudo = models.ForeignKey(ConteudoEmail, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return str(f"Tarefa: {self.tarefa} - Assunto: {self.assunto}")

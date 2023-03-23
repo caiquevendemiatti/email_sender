@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Colaborador, Contato, Task_Envio
+from .models import Colaborador, Contato, Task_Envio, ConteudoEmail, GeradorTarefas
 
 # Register your models here.
 @admin.register(Colaborador)
@@ -23,6 +23,7 @@ class ColaboradorAdmin(admin.ModelAdmin):
 @admin.register(Contato)
 class ContatoAdmin(admin.ModelAdmin):
     list_display = ("razao_social", "contato", "ativo", "excluido")
+    readonly_fields = ('id',)
     list_filter = ("razao_social", )
     actions = ['create_new_address_task']
 
@@ -37,6 +38,17 @@ class ContatoAdmin(admin.ModelAdmin):
            )
            task_envio.save()
 
+
 @admin.register(Task_Envio)
 class TaskEnvioAdmin(admin.ModelAdmin):
     list_display = ("tarefa", "assunto", "contato", "enviado")
+
+
+@admin.register(ConteudoEmail)
+class ConteudoEmailAdmin(admin.ModelAdmin):
+    list_display = ('assunto',)
+
+
+@admin.register(GeradorTarefas)
+class GeradorTarefasAdmin(admin.ModelAdmin):
+    list_display = ('pk','conteudo_email', 'por_vendedor', 'por_contato')

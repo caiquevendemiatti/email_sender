@@ -23,18 +23,6 @@ class SendEmail:
         self.logger = logging.getLogger(__name__)
         self.logger.debug("SEND E-MAIL CLASS")
 
-    def create_email_task(self, task_name, subject):
-        contact_list = Contato.objects.filter(ativo=True, excluido=False)
-
-        for contact in contact_list:
-            task_envio = Task_Envio(
-                tarefa=task_name,
-                assunto=subject,
-                contato=contact,
-                enviado=False
-            )
-            task_envio.save()
-
     def send_email_by_vendor(self):
         self.logger.debug(f"List vendors for sending e-mails")
         vendors = Colaborador.objects.filter(habilitado=True)
@@ -93,6 +81,16 @@ class SendEmail:
                 to_counter = 0
                 pk = []
                 to = []
+
+    def send_email(self, to, subject, ddd, whatsapp, vendor_name, vendor_email):
+        from_email = settings.EMAIL_HOST_USER
+        link_wa = f'https://wa.me/55{ddd}{whatsapp}'
+        format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
+        add_content = {'vendor_name': vendor_name,
+                       'vendor_email': vendor_email,
+                       'link_wa': link_wa,
+                       'phone_number': format_phone,
+                       'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
     def send_new_address(self, to, subject, ddd, whatsapp, vendor_name, vendor_email):
         from_email = settings.EMAIL_HOST_USER
