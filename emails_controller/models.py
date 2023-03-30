@@ -32,10 +32,12 @@ class Contato(models.Model):
     def __str__(self):
         return str(self.razao_social)
 
+
 class ConteudoEmail(models.Model):
     assunto = models.CharField(max_length=255, blank=False, null=False)
     cabecalho = models.CharField(max_length=255, blank=False, null=False)
     rodape = models.CharField(max_length=255, blank=False, null=False)
+    titulo = models.CharField(max_length=500, blank=False, null=False, default="'")
     conteudo_A = models.TextField(blank=False, null=False)
     conteudo_B = models.TextField(blank=True, null=True)
 
