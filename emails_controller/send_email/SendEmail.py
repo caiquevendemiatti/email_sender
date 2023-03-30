@@ -98,10 +98,10 @@ class SendEmail:
 
         html_content = render_to_string('email_hidrotube.html', add_content)
         text_content = strip_tags(html_content)
-        message = EmailMultiAlternatives(subject, html_content,
+        message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
                                          bcc=to)
-        message.attach_alternative(text_content, "text/html")
+        message.attach_alternative(html_content, "text/html")
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
             '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
