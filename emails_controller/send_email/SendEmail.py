@@ -86,9 +86,10 @@ class SendEmail:
         from_email = settings.EMAIL_HOST_USER
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
-        subject = conteudo_email.subject
+        subject = conteudo_email.assunto
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
+                       'conteudo_texto': conteudo_email.conteudo_A,
                        'vendor_name': vendor_name,
                        'vendor_email': vendor_email,
                        'link_wa': link_wa,
