@@ -176,6 +176,10 @@ class SendEmail:
             '<image18>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_19.png',
+            '<image19>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_20.png',
             '<image20>'))
 
