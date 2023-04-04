@@ -96,7 +96,7 @@ class SendEmail:
                        'phone_number': format_phone,
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
-        html_content = render_to_string('email_hidrotube3.html', add_content)
+        html_content = render_to_string('html_caique_2.html', add_content)
         text_content = strip_tags(html_content)
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
@@ -104,31 +104,31 @@ class SendEmail:
         message.attach_alternative(html_content, "text/html")
 
 
-        ## Arquivo html_caique_1
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
-        #     '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
-        #     '<image0>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
-        #     '/home/ubuntu/email_sender/templates/images/bannertopo.png',
-        #     '<image1>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-        #     '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
-        #     '<image5>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-        #     '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
-        #     '<image6>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-        #     '/home/ubuntu/email_sender/templates/images/linkedin-circle-colored.png',
-        #     '<image7>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-        #     '/home/ubuntu/email_sender/templates/images/logo_ht.png',
-        #     '<image8>'))
+        ## Arquivo html_caique_2
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
+            '<image0>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
+            '/home/ubuntu/email_sender/templates/images/bannertopo.png',
+            '<image1>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
+            '<image5>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
+            '<image6>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/linkedin-circle-colored.png',
+            '<image7>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht.png',
+            '<image8>'))
 
         ## Arquivo html_caique_1
         # message.attach(self.img_data(
