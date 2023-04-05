@@ -96,7 +96,7 @@ class SendEmail:
                        'phone_number': format_phone,
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
-        html_content = render_to_string('email_hidrotube3.html', add_content)
+        html_content = render_to_string('email_hidrotube4.html', add_content)
         text_content = strip_tags(html_content)
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
@@ -152,7 +152,7 @@ class SendEmail:
         #     '/home/ubuntu/email_sender/templates/images/logo_ht.png',
         #     '<image8>'))
 
-        ## Arquivo email_hidrotube_3
+        ## Arquivo email_hidrotube_4
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
             '/home/ubuntu/email_sender/templates/images/BannerTopo.png',
@@ -171,20 +171,102 @@ class SendEmail:
             '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_04.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_04_S_fundo.png',
             '<image5>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Icone_Localizacao.png',
+            '/home/ubuntu/email_sender/templates/images/Icone_Localizacao_S_fundo.png',
             '<image6>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_07.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_07_S_fundo.png',
             '<image7>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO-footer.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_08.png',
             '<image8>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_09.png',
+            '<image9>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_10.png',
+            '<image10>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_11.png',
+            '<image11>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Logo_HidroTube.png',
+            '<image12>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Site_HidroTube.png',
+            '<image13>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Icone_facebook.png',
+            '<image14>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Icone_instagram.png',
+            '<image15>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Icone_linkedin.png',
+            '<image16>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Icone_twitter.png',
+            '<image17>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_18.png',
+            '<image18>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_19.png',
+            '<image19>'))
+        message.attach(self.img_data(
+            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_20.png',
+            '<image20>'))
+
+        #Arquivo email_hidrotube_3
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
+        #     '/home/ubuntu/email_sender/templates/images/BannerTopo.png',
+        #     '<image1>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
+        #     '/home/ubuntu/email_sender/templates/images/font_Icone_WHATSAPP.png',
+        #     '<image2>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
+        #     '/home/ubuntu/email_sender/templates/images/font_Icone_EMAIL.png',
+        #     '<image3>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
+        #     '/home/ubuntu/email_sender/templates/images/font_Icone_TELEFONE.png',
+        #     '<image4>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+        #     '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_04.png',
+        #     '<image5>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+        #     '/home/ubuntu/email_sender/templates/images/Icone_Localizacao.png',
+        #     '<image6>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+        #     '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_07.png',
+        #     '<image7>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+        #     '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO-footer.png',
+        #     '<image8>'))
 
         ## Arquivo email_hidrotube_2
         # message.attach(self.img_data(
