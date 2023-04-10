@@ -139,9 +139,8 @@ class SendEmail:
             '<image8>'))
 
         try:
-            #result = message.send()
-            self.logger.debug(f"Enviando mensagem para {len(to)} clientes")
-            result = 1
+            result = message.send()
+
             if result == 1:
                 return True
 
