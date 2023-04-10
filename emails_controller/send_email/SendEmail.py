@@ -69,8 +69,10 @@ class SendEmail:
                 success = self.send_email(to, conteudo, ddd, whatsapp, vendor_name, vendor_email)
 
                 if success:
+                    self.logger.debug("Sucess sending")
                     self.mark_task_complete(pk)
                 else:
+                    self.logger.debug("Error sending")
                     self.mark_task_error(pk)
 
                 # If the number of pending contacts is less than email max receivers by e-mail,
@@ -83,6 +85,7 @@ class SendEmail:
                 to = []
 
     def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email):
+        self.logger.debug(f"Send Email Function - Receivers Count {self.receivers_count}")
         from_email = settings.EMAIL_HOST_USER
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
