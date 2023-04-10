@@ -89,7 +89,8 @@ class SendEmail:
         subject = conteudo_email.assunto
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
-                       'conteudo_texto': conteudo_email.conteudo_A,
+                       'conteudo_texto_A': conteudo_email.conteudo_A,
+                       'conteudo_texto_B': conteudo_email.conteudo_B,
                        'vendor_name': vendor_name,
                        'vendor_email': vendor_email,
                        'link_wa': link_wa,
