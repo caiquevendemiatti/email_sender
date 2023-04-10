@@ -55,6 +55,8 @@ class GeradorTarefas(models.Model):
     tarefas_criadas = models.BooleanField(default=False, null=False, blank=False)
 
     def save(self, *args, **kwargs):
+        self.tarefas_criadas = True
+        
         if not self.tarefas_criadas:
 
             if self.todos_contatos:
