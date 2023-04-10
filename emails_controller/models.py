@@ -46,34 +46,50 @@ class ConteudoEmail(models.Model):
 
 
 class GeradorTarefas(models.Model):
-    todos_contatos = models.BooleanField(default=True, null=False, blank=False)
+    todos_contatos = models.BooleanField(default=False, null=False, blank=False)
     por_vendedor = models.BooleanField(default=True, null=False, blank=False)
     vendedor = models.ForeignKey(Colaborador, on_delete=models.PROTECT, null=True, blank=True)
     por_contato = models.BooleanField(default=False, null=False, blank=False)
     contato = models.IntegerField(null=True, blank=True)
     conteudo_email = models.ForeignKey(ConteudoEmail, on_delete=models.PROTECT)
+    tarefas_criadas = models.BooleanField(default=False, null=False, blank=False)
 
     def save(self, *args, **kwargs):
-        if self.todos_contatos:
-            super().save(*args, **kwargs)
-            self.create_task_all_contacts()
-            return
+        if not self.tarefas_criadas:
 
-        if self.por_vendedor:
-            if not self.vendedor:
-                raise Exception("O campo vendedor deve ser preenchido")
-                return
-            super().save(*args, **kwargs)
-            self.create_task_by_vendor()
-            return
+            if self.todos_contatos:
+                if self.por_vendedor and self.por_contato:
+                    raise Exception("Marcar apenas uma opção de geração de task")
+                    return
 
-        if self.contato:
-            if not self.contato:
-                raise Exception("O campo contato deve ser preenchido")
+                super().save(*args, **kwargs)
+                self.create_task_all_contacts()
                 return
-            super().save(*args, **kwargs)
-            self.create_task_by_contact()
-            return
+
+            if self.por_vendedor:
+                if self.todos_contatos and self.por_contato:
+                    raise Exception("Marcar apenas uma opção de geração de task")
+                    return
+                if not self.vendedor:
+                    raise Exception("O campo vendedor deve ser preenchido")
+                    return
+                super().save(*args, **kwargs)
+                self.create_task_by_vendor()
+                return
+
+            if self.por_contato:
+                if self.todos_contatos and self.por_vendedor:
+                    raise Exception("Marcar apenas uma opção de geração de task")
+                    return
+                if not self.contato:
+                    raise Exception("O campo contato deve ser preenchido")
+                    return
+                super().save(*args, **kwargs)
+                self.create_task_by_contact()
+                return
+
+        super().save(*args, **kwargs)
+        return
 
     def create_task_all_contacts(self):
         contacts = Contato.objects.filter(ativo=True, excluido=False)
