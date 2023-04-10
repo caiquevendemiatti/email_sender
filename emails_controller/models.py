@@ -55,10 +55,9 @@ class GeradorTarefas(models.Model):
     tarefas_criadas = models.BooleanField(default=False, null=False, blank=False)
 
     def save(self, *args, **kwargs):
-        self.tarefas_criadas = True
-        
-        if not self.tarefas_criadas:
 
+        if not self.tarefas_criadas:
+            self.tarefas_criadas = True
             if self.todos_contatos:
                 if self.por_vendedor and self.por_contato:
                     raise Exception("Marcar apenas uma opção de geração de task")
