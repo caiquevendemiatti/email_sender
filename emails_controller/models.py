@@ -59,7 +59,7 @@ class GeradorTarefas(models.Model):
         if not self.tarefas_criadas:
             self.tarefas_criadas = True
             if self.todos_contatos:
-                if self.por_vendedor and self.por_contato:
+                if self.por_vendedor or self.por_contato:
                     raise Exception("Marcar apenas uma opção de geração de task")
                     return
 
@@ -68,7 +68,7 @@ class GeradorTarefas(models.Model):
                 return
 
             if self.por_vendedor:
-                if self.todos_contatos and self.por_contato:
+                if self.todos_contatos or self.por_contato:
                     raise Exception("Marcar apenas uma opção de geração de task")
                     return
                 if not self.vendedor:
@@ -79,7 +79,7 @@ class GeradorTarefas(models.Model):
                 return
 
             if self.por_contato:
-                if self.todos_contatos and self.por_vendedor:
+                if self.todos_contatos or self.por_vendedor:
                     raise Exception("Marcar apenas uma opção de geração de task")
                     return
                 if not self.contato:
