@@ -90,6 +90,7 @@ class SendEmail:
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
+        link_email_mga = f"http://marketing.hidrotube.com.br/premio_mga/?id={vendor_id}/"
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
@@ -99,11 +100,11 @@ class SendEmail:
                        'link_wa': link_wa,
                        'phone_number': format_phone,
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
-                       'link_email_mga': f'http://marketing.hidrotube.com.br/premio_mga/?id={vendor_id}/'}
+                       'link_email_mga': link_email_mga}
 
         html_content = render_to_string('premio_mga.html', add_content)
-        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />"
-        html_alternative += "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
+        html_alternative = f"<meta http-equiv=\"refresh\" content=\"0; url={link_email_mga}\" />"
+        html_alternative += f"<p><a href=\"{link_email_mga}\">Conteúdo e-mail</a></p>"
         text_content = html_alternative
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
@@ -118,15 +119,15 @@ class SendEmail:
             '<image1>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
-            '/home/ubuntu/email_sender/templates/images/premio2.jpg',
+            '/home/ubuntu/email_sender/templates/images/premio.png',
             '<image2>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/16859669113432_yf6.jpg',
+            '/home/ubuntu/email_sender/templates/images/valvulas_atuadas.png',
             '<image3>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/1685968574631.jpg',
+            '/home/ubuntu/email_sender/templates/images/valvulas_manuais.png',
             '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
