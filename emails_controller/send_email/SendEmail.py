@@ -101,13 +101,13 @@ class SendEmail:
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
         html_content = render_to_string('premio_mga.html', add_content)
-        text_content = strip_tags(html_content)
+        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />"
+        html_alternative += "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
+        text_content = html_alternative
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
                                          bcc=to)
 
-        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />"
-        html_alternative += "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
         message.attach_alternative(html_content, "text/html")
 
 
