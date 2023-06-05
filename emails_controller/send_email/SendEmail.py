@@ -106,8 +106,9 @@ class SendEmail:
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
                                          bcc=to)
 
-        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />" \
-                           "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
+        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />"
+        html_alternative += "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
+        message.attach_alternative(html_content, "text/html")
         message.attach_alternative(html_alternative, "text/html")
 
         message.attach(self.img_data(
