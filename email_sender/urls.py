@@ -14,11 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 
 from rest_framework.routers import DefaultRouter
 
-from emails_controller.views import CancelarInscrição, CancelarInscricaoPage
+from emails_controller.views import CancelarInscrição, CancelarInscricaoPage, PremioMgaPage
 
 router = DefaultRouter()
 
@@ -26,5 +26,6 @@ urlpatterns = [
     path('email_sender/', admin.site.urls),
     path('', include(router.urls)),
     path(r'unsubscribe/', CancelarInscrição.as_view(), name='unsubscribe'),
+    re_path(r'premio_mga/$', PremioMgaPage.as_view(), name='premio_mga'),
     path(r'cancelar_inscricao/', CancelarInscricaoPage.as_view(), name='cancelar_inscricao')
 ]

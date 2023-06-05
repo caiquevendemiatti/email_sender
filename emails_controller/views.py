@@ -8,7 +8,8 @@ from rest_framework.decorators import action, api_view
 from rest_framework.renderers import TemplateHTMLRenderer
 
 
-from .models import Contato
+
+from .models import Contato, Colaborador
 from .serializers import ContatoSerializer
 #
 class CancelarInscrição(UpdateAPIView):
@@ -35,3 +36,24 @@ class CancelarInscrição(UpdateAPIView):
 
 class CancelarInscricaoPage(TemplateView):
     template_name = 'unsubscribe.html'
+
+
+class PremioMgaPage(TemplateView):
+    template_name = 'premio_mga_server.html'
+
+    def get(self, *args, **kwargs):
+        vendor_id = self.request.GET['id']
+        colaborador = Colaborador.objects.get(id=vendor_id)
+        link_wa = link_wa = f'https://wa.me/55{colaborador.ddd}{colaborador.whatsapp}'
+        format_phone = f'({colaborador.ddd}) {colaborador.whatsapp[0:5]}-{colaborador.whatsapp[5:]}'
+
+        add_content = {'vendor_name': colaborador.nome,
+                           'vendor_email': colaborador.e_mail,
+                           'link_wa': link_wa,
+                           'phone_number': format_phone,
+                           'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+
+        return render(self.request, self.template_name, add_content)
+
+
+

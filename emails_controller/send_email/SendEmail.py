@@ -105,8 +105,10 @@ class SendEmail:
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
                                          bcc=to)
-        message.attach_alternative(html_content, "text/html")
 
+        html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />" \
+                           "<p><a href=\"http://localhost:8000/premio_mga/?id=1\">Redirect</a></p>"
+        message.attach_alternative(html_alternative, "text/html")
 
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
