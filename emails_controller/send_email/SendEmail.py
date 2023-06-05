@@ -33,7 +33,7 @@ class SendEmail:
 
     def run_email_tasks(self, vendor):
         self.logger.debug(f"Run e-mail tasks {vendor.nome}")
-
+        vendor_id = vendor.pk
         vendor_name = vendor.nome
         vendor_email = vendor.e_mail
         whatsapp = vendor.whatsapp
@@ -66,7 +66,7 @@ class SendEmail:
             if to_counter == max_receivers_by_message:
                 conteudo = task.conteudo
                 self.logger.debug(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
-                success = self.send_email(to, conteudo, ddd, whatsapp, vendor_name, vendor_email)
+                success = self.send_email(to, conteudo, ddd, whatsapp, vendor_name, vendor_email, vendor.pk)
 
                 if success:
                     self.logger.debug("Sucess sending")
@@ -84,7 +84,7 @@ class SendEmail:
                 pk = []
                 to = []
 
-    def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email):
+    def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email, vendor_id):
         self.logger.debug(f"Send Email Function - Receivers Count {self.receivers_count}")
         from_email = settings.EMAIL_HOST_USER
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
@@ -98,7 +98,8 @@ class SendEmail:
                        'vendor_email': vendor_email,
                        'link_wa': link_wa,
                        'phone_number': format_phone,
-                       'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+                       'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
+                       'link_email_mga': f'http://marketing.hidrotube.com.br/premio_mga/?id={vendor_id}/'}
 
         html_content = render_to_string('premio_mga.html', add_content)
         html_alternative = "<meta http-equiv=\"refresh\" content=\"0; url=http://localhost:8000/premio_mga/?id=1\" />"
