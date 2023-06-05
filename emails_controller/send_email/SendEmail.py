@@ -100,7 +100,7 @@ class SendEmail:
                        'phone_number': format_phone,
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
-        html_content = render_to_string('email_hidrotube4.html', add_content)
+        html_content = render_to_string('premio_mga.html', add_content)
         text_content = strip_tags(html_content)
         message = EmailMultiAlternatives(subject, text_content,
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
@@ -110,35 +110,35 @@ class SendEmail:
 
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
-            '/home/ubuntu/email_sender/templates/images/BannerTopo.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
-            '/home/ubuntu/email_sender/templates/images/font_Icone_WHATSAPP.png',
+            '/home/ubuntu/email_sender/templates/images/premio2.jpg',
             '<image2>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/font_Icone_EMAIL.png',
+            '/home/ubuntu/email_sender/templates/images/16859669113432_yf6.jpg',
             '<image3>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/font_Icone_TELEFONE.png',
+            '/home/ubuntu/email_sender/templates/images/1685968574631.jpg',
             '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_04_S_fundo.png',
+            '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
             '<image5>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Icone_Localizacao_S_fundo.png',
+            '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
             '<image6>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_07_S_fundo.png',
+            '/home/ubuntu/email_sender/templates/images/linkedin-circle-colored.png',
             '<image7>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO-footer.png',
+            '/home/ubuntu/email_sender/templates/images/logo_ht_QIt.png',
             '<image8>'))
 
         try:
@@ -154,6 +154,79 @@ class SendEmail:
         except Exception as error:
             self.logger.debug(f"Unknown error sending email: {error}")
         return False
+
+
+    ## Função utilizada quando o e-mail de novo endereço for empregado
+    # def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email):
+    #     self.logger.debug(f"Send Email Function - Receivers Count {self.receivers_count}")
+    #     from_email = settings.EMAIL_HOST_USER
+    #     link_wa = f'https://wa.me/55{ddd}{whatsapp}'
+    #     format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
+    #     subject = conteudo_email.assunto
+    #
+    #     add_content = {'conteudo_titulo': conteudo_email.titulo,
+    #                    'conteudo_texto_A': conteudo_email.conteudo_A,
+    #                    'conteudo_texto_B': conteudo_email.conteudo_B,
+    #                    'vendor_name': vendor_name,
+    #                    'vendor_email': vendor_email,
+    #                    'link_wa': link_wa,
+    #                    'phone_number': format_phone,
+    #                    'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+    #
+    #     html_content = render_to_string('novo_endereco.html', add_content)
+    #     text_content = strip_tags(html_content)
+    #     message = EmailMultiAlternatives(subject, text_content,
+    #                                      from_email=f"Hidrotube - Marketing <{from_email}>",
+    #                                      bcc=to)
+    #     message.attach_alternative(html_content, "text/html")
+    #
+    #
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
+    #         '/home/ubuntu/email_sender/templates/images/BannerTopo.png',
+    #         '<image1>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
+    #         '/home/ubuntu/email_sender/templates/images/font_Icone_WHATSAPP.png',
+    #         '<image2>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
+    #         '/home/ubuntu/email_sender/templates/images/font_Icone_EMAIL.png',
+    #         '<image3>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
+    #         '/home/ubuntu/email_sender/templates/images/font_Icone_TELEFONE.png',
+    #         '<image4>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+    #         '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_04_S_fundo.png',
+    #         '<image5>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+    #         '/home/ubuntu/email_sender/templates/images/Icone_Localizacao_S_fundo.png',
+    #         '<image6>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+    #         '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_07_S_fundo.png',
+    #         '<image7>'))
+    #     message.attach(self.img_data(
+    #         # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+    #         '/home/ubuntu/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO-footer.png',
+    #         '<image8>'))
+    #
+    #     try:
+    #         result = message.send()
+    #
+    #         if result == 1:
+    #             return True
+    #
+    #         return False
+    #     except SMTPException as e:
+    #         self.logger.debug('There was an error sending an email: ', e)
+    #         return False
+    #     except Exception as error:
+    #         self.logger.debug(f"Unknown error sending email: {error}")
+    #     return False
 
     def deactivate_error_email(self):
         tasks = Task_Envio.objects.filter(enviado=False, tentativas_envio__gte=2)

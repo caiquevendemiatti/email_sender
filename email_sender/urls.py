@@ -22,9 +22,6 @@ from emails_controller.views import CancelarInscrição, CancelarInscricaoPage
 
 router = DefaultRouter()
 
-# router.register(r'create_contato', CreateContato, basename='create_contato')
-# router.register(r'create_contato/partial_update', CreateContato, basename='partial_update')
-
 urlpatterns = [
     path('email_sender/', admin.site.urls),
     path('', include(router.urls)),
