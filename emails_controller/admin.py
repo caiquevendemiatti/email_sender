@@ -51,4 +51,4 @@ class ConteudoEmailAdmin(admin.ModelAdmin):
 
 @admin.register(GeradorTarefas)
 class GeradorTarefasAdmin(admin.ModelAdmin):
-    list_display = ('pk','conteudo_email', 'por_vendedor', 'por_contato')
+    list_display = ('pk','conteudo_email', 'por_vendedor', 'vendedor', 'por_contato')
