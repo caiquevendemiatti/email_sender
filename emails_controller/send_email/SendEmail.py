@@ -102,7 +102,7 @@ class SendEmail:
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
                        'link_email_mga': link_email_server}
 
-        html_content = render_to_string('premio_mga.html', add_content)
+        html_content = render_to_string('premio_tupy.html', add_content)
         html_alternative = f"<meta http-equiv=\"refresh\" content=\"0; url={link_email_server}\" />"
         html_alternative += f"<p><a href=\"{link_email_server}\">Conteúdo e-mail</a></p>"
         text_content = html_alternative
