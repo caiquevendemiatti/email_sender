@@ -18,7 +18,7 @@ from django.urls import path, include, re_path
 
 from rest_framework.routers import DefaultRouter
 
-from emails_controller.views import CancelarInscrição, CancelarInscricaoPage, PremioMgaPage
+from emails_controller.views import CancelarInscrição, CancelarInscricaoPage, PremioMgaPage, PremioTupyPage
 
 router = DefaultRouter()
 
@@ -27,5 +27,6 @@ urlpatterns = [
     path('', include(router.urls)),
     path(r'unsubscribe/', CancelarInscrição.as_view(), name='unsubscribe'),
     re_path(r'premio_mga/$', PremioMgaPage.as_view(), name='premio_mga'),
+    re_path(r'premio_tupy/$', PremioTupyPage.as_view(), name='premio_tupy'),
     path(r'cancelar_inscricao/', CancelarInscricaoPage.as_view(), name='cancelar_inscricao')
 ]
