@@ -90,7 +90,7 @@ class SendEmail:
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
-        link_email_server = f"http://marketing.hidrotube.com.br/premio_tupy/?id={vendor_id}"
+        link_email_server = f"http://marketing.hidrotube.com.br/linha_vapor/?id={vendor_id}"
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
