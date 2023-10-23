@@ -102,7 +102,7 @@ class SendEmail:
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
                        'link_email_mga': link_email_server}
 
-        html_content = render_to_string('premio_tupy.html', add_content)
+        html_content = render_to_string('linha_vapor.html', add_content)
         html_alternative = f"<meta http-equiv=\"refresh\" content=\"0; url={link_email_server}\" />"
         html_alternative += f"<p><a href=\"{link_email_server}\">Conteúdo e-mail</a></p>"
         text_content = html_alternative
@@ -118,15 +118,15 @@ class SendEmail:
             '<image1>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
-            '/home/ubuntu/email_sender/templates/images/premio_tupy.png',
+            '/home/ubuntu/email_sender/templates/images/vapor_1.png',
             '<image2>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/caixas_tupy.png',
+            '/home/ubuntu/email_sender/templates/images/vapor_2.png',
             '<image3>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/prateleira_tupy.png',
+            '/home/ubuntu/email_sender/templates/images/vapor_3.png',
             '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',

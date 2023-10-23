@@ -37,6 +37,31 @@ class CancelarInscrição(UpdateAPIView):
 class CancelarInscricaoPage(TemplateView):
     template_name = 'unsubscribe.html'
 
+class LinhaVaporPage(TemplateView):
+    template_name = 'linha_vapor_server.html'
+
+    def get(self, *args, **kwargs):
+        vendor_id = self.request.GET['id']
+        try:
+            colaborador = Colaborador.objects.get(id=vendor_id)
+            link_wa = link_wa = f'https://wa.me/55{colaborador.ddd}{colaborador.whatsapp}'
+            format_phone = f'({colaborador.ddd}) {colaborador.whatsapp[0:5]}-{colaborador.whatsapp[5:]}'
+
+            add_content = {'vendor_name': colaborador.nome,
+                           'vendor_email': colaborador.e_mail,
+                           'link_wa': link_wa,
+                           'phone_number': format_phone,
+                           'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+
+        except Colaborador.DoesNotExist:
+
+            add_content = {'vendor_name': 'Hidrotube',
+                           'vendor_email': 'hidrotube@hidrotube.com.br',
+                           'link_wa': f'https://wa.me/5519997898757',
+                           'phone_number': f'(19) 99789-8757',
+                           'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+
+        return render(self.request, self.template_name, add_content)
 
 class PremioMgaPage(TemplateView):
     template_name = 'premio_mga_server.html'
