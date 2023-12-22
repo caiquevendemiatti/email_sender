@@ -18,7 +18,7 @@ from emails_controller.models import Task_Envio, Contato, Colaborador
 class SendEmail:
     def __init__(self):
         self.receivers_block_limit = 50
-        self.receivers_limit_hour = 450
+        self.receivers_limit_hour = 300
         self.receivers_count = 0
         self.logger = logging.getLogger(__name__)
         self.logger.debug("SEND E-MAIL CLASS")
