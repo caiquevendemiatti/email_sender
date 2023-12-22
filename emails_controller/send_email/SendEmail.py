@@ -90,7 +90,7 @@ class SendEmail:
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
-        link_email_server = f"http://marketing.hidrotube.com.br/linha_vapor/?id={vendor_id}"
+        link_email_server = f"http://marketing.hidrotube.com.br/boas_festas/?id={vendor_id}"
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
@@ -118,16 +118,16 @@ class SendEmail:
             '<image1>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
-            '/home/ubuntu/email_sender/templates/images/vapor_1.png',
+            '/home/ubuntu/email_sender/templates/images/Boas_festas.png',
             '<image2>'))
-        message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/vapor_2.png',
-            '<image3>'))
-        message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
-            '/home/ubuntu/email_sender/templates/images/vapor_3.png',
-            '<image4>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
+        #     '/home/ubuntu/email_sender/templates/images/vapor_2.png',
+        #     '<image3>'))
+        # message.attach(self.img_data(
+        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
+        #     '/home/ubuntu/email_sender/templates/images/vapor_3.png',
+        #     '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',

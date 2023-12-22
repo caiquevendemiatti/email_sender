@@ -140,3 +140,9 @@ class Task_Envio(models.Model):
 
     def __str__(self):
         return str(f"Tarefa: {self.tarefa} - Assunto: {self.assunto}")
+
+
+
+
+
+

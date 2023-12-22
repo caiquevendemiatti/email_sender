@@ -19,7 +19,7 @@ from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 
 from emails_controller.views import CancelarInscrição, CancelarInscricaoPage, PremioMgaPage, \
-                                    PremioTupyPage, LinhaVaporPage
+                                    PremioTupyPage, LinhaVaporPage, BoasFestasPage
 
 router = DefaultRouter()
 
@@ -30,5 +30,6 @@ urlpatterns = [
     re_path(r'premio_mga/$', PremioMgaPage.as_view(), name='premio_mga'),
     re_path(r'premio_tupy/$', PremioTupyPage.as_view(), name='premio_tupy'),
     re_path(r'linha_vapor/$', LinhaVaporPage.as_view(), name='linha_vapor'),
+    re_path(r'boas_festas/$', BoasFestasPage.as_view(), name='boas_festas'),
     path(r'cancelar_inscricao/', CancelarInscricaoPage.as_view(), name='cancelar_inscricao')
 ]
