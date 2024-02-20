@@ -28,11 +28,24 @@ class Contato(models.Model):
     ativo = models.BooleanField(default=True, null=False, blank=False)
     excluido = models.BooleanField(default=False, null=False, blank=False)
     colaborador_responsavel = models.ForeignKey(Colaborador, on_delete=models.PROTECT)
+    pesquisa_satisfacao = models.BooleanField(null=False, blank=False, default=False)
 
     def __str__(self):
         return str(self.razao_social)
 
-
+# contatos_list = []
+# for contato in contatos:
+#     contato_to_list = {
+#         'id': contato.pk,
+#         'Razao_Social': contato.razao_social,
+#         'Nome_Contato': contato.contato,
+#         'E_mail': contato.e_mail,
+#         'Ativo': contato.ativo,
+#         'Excluido': contato.excluido,
+#         'Colaborador': contato.colaborador_responsavel.nome
+#     }
+#     contatos_list.append(contato_to_list)
+# colunas = ['id', 'Razao_Social', 'Nome_Contato', 'E_mail', 'Ativo', 'Excluido', 'Colaborador']
 class ConteudoEmail(models.Model):
     assunto = models.CharField(max_length=255, blank=False, null=False)
     cabecalho = models.CharField(max_length=255, blank=False, null=False)
