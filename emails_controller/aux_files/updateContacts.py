@@ -15,7 +15,7 @@ class UpdateContacts:
     def process_info(self):
 
         for index, row in self.df.iterrows():
-            print(f'Atualizando: {row["Razao_Social"]}')
+            print(f'Atualizando: {row["Razao_Social"]} - Colaborador {row["Colaborador"]}')
             contato = Contato.objects.get(id=row['id'])
             colaborador = Colaborador.objects.get(nome=row['Colaborador'])
             pesquisa = True if row['Pesquisa'] == 1 else False
