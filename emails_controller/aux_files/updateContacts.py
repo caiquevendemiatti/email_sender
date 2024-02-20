@@ -20,7 +20,7 @@ class UpdateContacts:
             colaborador = Colaborador.objects.get(nome=row['Colaborador'])
             pesquisa = True if row['Pesquisa'] == 1 else False
 
-            contato.update(
-                colaborador=colaborador,
-                pesquisa=pesquisa
-            )
+            contato.colaborador_responsavel = colaborador
+            contato.pesquisa_satisfacao = pesquisa
+            contato.save()
+
