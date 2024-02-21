@@ -20,7 +20,7 @@ from rest_framework.routers import DefaultRouter
 
 from emails_controller.views import CancelarInscrição, CancelarInscricaoPage, PremioMgaPage, \
                                     PremioTupyPage, LinhaVaporPage, BoasFestasPage, AlertaFraudeBoleto, \
-                                    PesquisaQualidadePage,
+                                    PesquisaQualidadePage
 
 router = DefaultRouter()
 
