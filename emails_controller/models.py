@@ -1,6 +1,7 @@
 from django.db import models
 import logging
-
+from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 from django.db.models import BooleanField
 
 
@@ -33,19 +34,7 @@ class Contato(models.Model):
     def __str__(self):
         return str(self.razao_social)
 
-# contatos_list = []
-# for contato in contatos:
-#     contato_to_list = {
-#         'id': contato.pk,
-#         'Razao_Social': contato.razao_social,
-#         'Nome_Contato': contato.contato,
-#         'E_mail': contato.e_mail,
-#         'Ativo': contato.ativo,
-#         'Excluido': contato.excluido,
-#         'Colaborador': contato.colaborador_responsavel.nome
-#     }
-#     contatos_list.append(contato_to_list)
-# colunas = ['id', 'Razao_Social', 'Nome_Contato', 'E_mail', 'Ativo', 'Excluido', 'Colaborador']
+
 class ConteudoEmail(models.Model):
     assunto = models.CharField(max_length=255, blank=False, null=False)
     cabecalho = models.CharField(max_length=255, blank=False, null=False)
@@ -66,47 +55,64 @@ class GeradorTarefas(models.Model):
     contato = models.IntegerField(null=True, blank=True)
     conteudo_email = models.ForeignKey(ConteudoEmail, on_delete=models.PROTECT)
     tarefas_criadas = models.BooleanField(default=False, null=False, blank=False)
+    pesquisa_satisfacao = models.BooleanField(default=False, null=False, blank=False, verbose_name='Pesquisa de Satisfação')
+
+    def clean(self):
+        if not self.todos_contatos and not self.por_vendedor and not self.por_contato:
+            raise ValidationError(_('Selecione apenas um filtro entre "Por Contato", '
+                                    '"Por Vendedor" ou  "Todos os Contatos"'))
+
+        if self.todos_contatos and self.por_vendedor:
+            raise ValidationError(_('Selecione um filtro entre "Por Contato", "Por Vendedor" ou  "Todos os Contatos"'))
+
+        if self.todos_contatos and self.por_contato:
+            raise ValidationError(_('Selecione um filtro entre "Por Contato", "Por Vendedor" ou  "Todos os Contatos"'))
+
+        if self.por_vendedor and self.por_contato:
+            raise ValidationError(_('Selecione um filtro entre "Por Contato", "Por Vendedor" ou  "Todos os Contatos"'))
+
+        if self.todos_contatos and (self.contato is not None or self.vendedor is not None):
+            raise ValidationError(_('Não adicionar "Contato" ou "Vendedor" para o filtro "Todos os Contatos"'))
+
+        if self.por_vendedor and (self.vendedor is None):
+            raise ValidationError(_('Selecionar um vendedor'))
+
+        if self.por_vendedor and (self.contato is not None):
+            raise ValidationError(_('Não selecionar um "Contato" para o filtro "Por Vendedor"'))
+
+        if self.por_contato and (self.contato is None):
+            raise ValidationError(_('Selecionar um contato'))
+
+        if self.por_contato and (self.vendedor is not None):
+            raise ValidationError(_('Não selecionar um "Vendedor" para o filtro "Por Contato"'))
 
     def save(self, *args, **kwargs):
 
-        if not self.tarefas_criadas:
-            self.tarefas_criadas = True
-            if self.todos_contatos:
-                if self.por_vendedor or self.por_contato:
-                    raise Exception("Marcar apenas uma opção de geração de task")
-                    return
+        if self.tarefas_criadas:
+            super().save(*args, **kwargs)
+            return
 
-                super().save(*args, **kwargs)
-                self.create_task_all_contacts()
-                return
+        self.tarefas_criadas = True
 
-            if self.por_vendedor:
-                if self.todos_contatos or self.por_contato:
-                    raise Exception("Marcar apenas uma opção de geração de task")
-                    return
-                if not self.vendedor:
-                    raise Exception("O campo vendedor deve ser preenchido")
-                    return
-                super().save(*args, **kwargs)
-                self.create_task_by_vendor()
-                return
+        if self.todos_contatos:
+            super().save(*args, **kwargs)
+            self.create_task_all_contacts()
+            return
 
-            if self.por_contato:
-                if self.todos_contatos or self.por_vendedor:
-                    raise Exception("Marcar apenas uma opção de geração de task")
-                    return
-                if not self.contato:
-                    raise Exception("O campo contato deve ser preenchido")
-                    return
-                super().save(*args, **kwargs)
-                self.create_task_by_contact()
-                return
+        if self.por_vendedor:
+            super().save(*args, **kwargs)
+            self.create_task_by_vendor()
 
-        super().save(*args, **kwargs)
-        return
+        if self.por_contato:
+            super().save(*args, **kwargs)
+            self.create_task_by_contact()
+            return
 
     def create_task_all_contacts(self):
         contacts = Contato.objects.filter(ativo=True, excluido=False)
+        if self.pesquisa_satisfacao:
+            contacts = contacts.filter(pesquisa_satisfacao=True)
+
         for contact in contacts:
             task_envio = Task_Envio(
                 tarefa=self.pk,
@@ -119,6 +125,8 @@ class GeradorTarefas(models.Model):
 
     def create_task_by_vendor(self):
         contacts = Contato.objects.filter(ativo=True, excluido=False, colaborador_responsavel=self.vendedor)
+        if self.pesquisa_satisfacao:
+            contacts = contacts.filter(pesquisa_satisfacao=True)
 
         for contact in contacts:
             task_envio = Task_Envio(
@@ -131,12 +139,14 @@ class GeradorTarefas(models.Model):
             task_envio.save()
 
     def create_task_by_contact(self):
-        contact = Contato.objects.get(pk=self.contato)
+        contacts = Contato.objects.get(pk=self.contato)
+        if self.pesquisa_satisfacao:
+            contacts = contacts.filter(pesquisa_satisfacao=True)
 
         task_envio = Task_Envio(
             tarefa=self.pk,
             assunto=self.conteudo_email.assunto,
-            contato=contact,
+            contato=contacts,
             conteudo=self.conteudo_email,
             enviado=False
         )
@@ -153,9 +163,3 @@ class Task_Envio(models.Model):
 
     def __str__(self):
         return str(f"Tarefa: {self.tarefa} - Assunto: {self.assunto}")
-
-
-
-
-
-
