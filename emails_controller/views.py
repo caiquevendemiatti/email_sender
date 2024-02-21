@@ -6,12 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.renderers import TemplateHTMLRenderer
-
-
-
 from .models import Contato, Colaborador
 from .serializers import ContatoSerializer
 #
+
 class CancelarInscrição(UpdateAPIView):
 
     authentication_classes = []  # disables authentication
@@ -36,6 +34,7 @@ class CancelarInscrição(UpdateAPIView):
 
 class CancelarInscricaoPage(TemplateView):
     template_name = 'unsubscribe.html'
+
 
 class LinhaVaporPage(TemplateView):
     template_name = 'linha_vapor_server.html'
@@ -62,6 +61,7 @@ class LinhaVaporPage(TemplateView):
                            'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
 
         return render(self.request, self.template_name, add_content)
+
 
 class PremioMgaPage(TemplateView):
     template_name = 'premio_mga_server.html'
@@ -134,3 +134,20 @@ class AlertaFraudeBoleto(TemplateView):
 
         return render(self.request, self.template_name, add_content)
 
+
+class PesquisaQualidadePage(TemplateView):
+    template_name = 'pesquisa_qualidade_server.html'
+
+    def get(self, *args, **kwargs):
+        vendor_id = self.request.GET['id']
+        colaborador = Colaborador.objects.get(id=vendor_id)
+        link_wa = link_wa = f'https://wa.me/55{colaborador.ddd}{colaborador.whatsapp}'
+        format_phone = f'({colaborador.ddd}) {colaborador.whatsapp[0:5]}-{colaborador.whatsapp[5:]}'
+
+        add_content = {'vendor_name': colaborador.nome,
+                           'vendor_email': colaborador.e_mail,
+                           'link_wa': link_wa,
+                           'phone_number': format_phone,
+                           'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao'}
+
+        return render(self.request, self.template_name, add_content)
