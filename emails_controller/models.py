@@ -139,14 +139,15 @@ class GeradorTarefas(models.Model):
             task_envio.save()
 
     def create_task_by_contact(self):
-        contacts = Contato.objects.get(pk=self.contato)
-        if self.pesquisa_satisfacao:
-            contacts = contacts.filter(pesquisa_satisfacao=True)
+        contact = Contato.objects.get(pk=self.contato)
+        if self.pesquisa_satisfacao and not contact.pesquisa_satisfacao:
+            raise ValidationError(_("Contato não pode receber pesquisa de satisfação"))
+            return
 
         task_envio = Task_Envio(
             tarefa=self.pk,
             assunto=self.conteudo_email.assunto,
-            contato=contacts,
+            contato=contact,
             conteudo=self.conteudo_email,
             enviado=False
         )
