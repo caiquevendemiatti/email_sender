@@ -92,7 +92,7 @@
 <script>
   async function call_cancel(){
     console.log("Call Cancel")
-    const url = 'http://marketing.hidrotube.com.br/unsubscribe/'
+    const url = 'https://marketing.hidrotube.com.br/unsubscribe/'
     const payload = {e_mail: document.getElementById('email_addr').value }
     const response = await axios.put(url, payload)
     alert(response.data)
