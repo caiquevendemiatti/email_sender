@@ -114,7 +114,7 @@ class SendEmail:
 
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
-            '/home/ubuntu/email_sender/templates/images/logo_ht_grande.png',
+            '/home/iot_server/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         # message.attach(self.img_data(
         #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
@@ -130,19 +130,19 @@ class SendEmail:
         #     '<image4>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/facebook-circle-colored.png',
+            '/home/iot_server/email_sender/templates/images/facebook-circle-colored.png',
             '<image5>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/instagram-circle-colored.png',
+            '/home/iot_server/email_sender/templates/images/instagram-circle-colored.png',
             '<image6>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/linkedin-circle-colored.png',
+            '/home/iot_server/email_sender/templates/images/linkedin-circle-colored.png',
             '<image7>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/ubuntu/email_sender/templates/images/logo_ht_QIt.png',
+            '/home/iot_server/email_sender/templates/images/logo_ht_QIt.png',
             '<image8>'))
 
         try:
