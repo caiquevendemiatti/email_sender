@@ -90,7 +90,7 @@ class SendEmail:
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
-        link_email_server = f"http://marketing.hidrotube.com.br/pesquisa-qualidade-vendas/?id={vendor_id}"
+
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
@@ -100,9 +100,9 @@ class SendEmail:
                        'link_wa': link_wa,
                        'phone_number': format_phone,
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
-                       'link_email_mga': link_email_server}
+                       }
 
-        html_content = render_to_string('pesquisa_qualidade.html', add_content)
+        html_content = render_to_string('apresentacao_loja.html', add_content)
         html_alternative = f"<meta http-equiv=\"refresh\" content=\"0; url={link_email_server}\" />"
         html_alternative += f"<p><a href=\"{link_email_server}\">Conteúdo e-mail</a></p>"
         text_content = html_alternative
@@ -113,37 +113,46 @@ class SendEmail:
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/Campanha-NOVA-SEDE_EMKT_GABARITO_01.png',
             '/home/iot_server/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/gopr3487r.jpg',
-        #     '/home/ubuntu/email_sender/templates/images/exemplo_boleto.png',
-        #     '<image2>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/facebook-circle-colored.png',
-        #     '/home/ubuntu/email_sender/templates/images/vapor_2.png',
-        #     '<image3>'))
-        # message.attach(self.img_data(
-        #     # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/instagram-circle-colored.png',
-        #     '/home/ubuntu/email_sender/templates/images/vapor_3.png',
-        #     '<image4>'))
         message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
+            '/home/iot_server/email_sender/templates/images/fachada.png',
+            '<image2>'
+        ))
+        message.attach(self.img_data(
+            '/home/iot_server/email_sender/templates/images/estoque.png',
+            '<image3>'
+        ))
+        message.attach(self.img_data(
+            '/home/iot_server/email_sender/templates/images/estoque_tupy_rd.png',
+            '<image4>'
+        ))
+        message.attach(self.img_data(
+            '/home/iot_server/email_sender/templates/images/valvs_industriais_rd.png',
+            '<image5>'
+        ))
+        message.attach(self.img_data(
+            '/home/iot_server/email_sender/templates/images/tubos.png',
+            '<image6>'
+        ))
+        message.attach(self.img_data(
+            '/home/iot_server/email_sender/templates/images/gavetas_rd.png',
+            '<image7>'
+        ))
+        message.attach(self.img_data(
             '/home/iot_server/email_sender/templates/images/facebook-circle-colored.png',
-            '<image5>'))
+            '<image8>'))
         message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/iot_server/email_sender/templates/images/instagram-circle-colored.png',
-            '<image6>'))
+            '<image9>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/iot_server/email_sender/templates/images/linkedin-circle-colored.png',
-            '<image7>'))
+            '<image10>'))
         message.attach(self.img_data(
             # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
             '/home/iot_server/email_sender/templates/images/logo_ht_QIt.png',
-            '<image8>'))
+            '<image11>'))
 
         try:
             result = message.send()
