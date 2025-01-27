@@ -103,10 +103,9 @@ class SendEmail:
                        }
 
         html_content = render_to_string('apresentacao_loja.html', add_content)
-        html_alternative = f"<meta http-equiv=\"refresh\" content=\"0; url={link_email_server}\" />"
-        html_alternative += f"<p><a href=\"{link_email_server}\">Conteúdo e-mail</a></p>"
-        text_content = html_alternative
-        message = EmailMultiAlternatives(subject, text_content,
+
+
+        message = EmailMultiAlternatives(subject, "",
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
                                          bcc=to)
 
