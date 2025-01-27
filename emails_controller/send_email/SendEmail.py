@@ -115,27 +115,27 @@ class SendEmail:
             '/home/iot_server/email_sender/templates/images/logo_ht_grande.png',
             '<image1>'))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/fachada.png',
+            '/home/iot_server/email_sender/templates/images/fachada_1.jpg',
             '<image2>'
         ))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/estoque.png',
+            '/home/iot_server/email_sender/templates/images/estoque_1.jpg',
             '<image3>'
         ))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/estoque_tupy_rd.png',
+            '/home/iot_server/email_sender/templates/images/estoque_tupy_rd_1.jpg',
             '<image4>'
         ))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/valvs_industriais_rd.png',
+            '/home/iot_server/email_sender/templates/images/valvs_industriais_rd_1.jpg',
             '<image5>'
         ))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/tubos.png',
+            '/home/iot_server/email_sender/templates/images/tubos_1.jpg',
             '<image6>'
         ))
         message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/gavetas_rd.png',
+            '/home/iot_server/email_sender/templates/images/gavetas_rd_1.jpg',
             '<image7>'
         ))
         message.attach(self.img_data(
