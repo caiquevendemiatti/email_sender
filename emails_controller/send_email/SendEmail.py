@@ -8,12 +8,13 @@ from email.mime.image import MIMEImage
 from smtplib import SMTPException
 import time
 import logging
-
+import os
 from django.contrib.staticfiles import finders
 from functools import lru_cache
 
 from emails_controller.models import Task_Envio, Contato, Colaborador
 
+from django.db.models.fields.files import ImageFieldFile
 
 class SendEmail:
     def __init__(self):
@@ -91,10 +92,10 @@ class SendEmail:
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
 
-
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
                        'conteudo_texto_B': conteudo_email.conteudo_B,
+                       'pre_imagens': conteudo_email.pre_imagens,
                        'vendor_name': vendor_name,
                        'vendor_email': vendor_email,
                        'link_wa': link_wa,
@@ -102,7 +103,7 @@ class SendEmail:
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
                        }
 
-        html_content = render_to_string('apresentacao_loja.html', add_content)
+        html_content = render_to_string('template_std_6_img.html', add_content)
 
 
         message = EmailMultiAlternatives(subject, "",
@@ -111,47 +112,18 @@ class SendEmail:
 
         message.attach_alternative(html_content, "text/html")
 
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/logo_ht_grande.png',
-            '<image1>'))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/fachada_1.jpg',
-            '<image2>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/estoque_1.jpg',
-            '<image3>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/estoque_tupy_rd_1.jpg',
-            '<image4>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/valvs_industriais_rd_1.jpg',
-            '<image5>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/tubos_1.jpg',
-            '<image6>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/gavetas_rd_1.jpg',
-            '<image7>'
-        ))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/facebook-circle-colored.png',
-            '<image8>'))
-        message.attach(self.img_data(
-            '/home/iot_server/email_sender/templates/images/instagram-circle-colored.png',
-            '<image9>'))
-        message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/iot_server/email_sender/templates/images/linkedin-circle-colored.png',
-            '<image10>'))
-        message.attach(self.img_data(
-            # 'C:/Users/caiqu/Documents/Hidrotube/email_sender/templates/images/logo_ht.png',
-            '/home/iot_server/email_sender/templates/images/logo_ht_QIt.png',
-            '<image11>'))
+        message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
+
+        message.attach(self.img_data(conteudo_email.foto_a, '<image1>'))
+        message.attach(self.img_data(conteudo_email.foto_b, '<image2>'))
+        message.attach(self.img_data(conteudo_email.foto_c, '<image3>'))
+        message.attach(self.img_data(conteudo_email.foto_d, '<image4>'))
+        message.attach(self.img_data(conteudo_email.foto_e, '<image5>'))
+        message.attach(self.img_data(conteudo_email.foto_f, '<image6>'))
+
+        message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
+        message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))
+        message.attach(self.img_data('templates/images/linkedin_logo_white.png', '<linkedin_logo>'))
 
         try:
             result = message.send()
@@ -177,12 +149,23 @@ class SendEmail:
             contato.save()
 
     @staticmethod
-    def img_data(path, cname):
-        with open(path, 'rb') as f:
-            logo_data = f.read()
-        logo = MIMEImage(logo_data)
-        logo.add_header('Content-ID', cname)
-        return logo
+    def img_data(path_, cname):
+        if isinstance(path_, str):
+            # Caminho absoluto vindo como string
+            path = os.path.join(settings.MEDIA_ROOT, path_)
+            with open(path, 'rb') as f:
+                img_data = f.read()
+        elif isinstance(path_, ImageFieldFile):
+            # Objeto vindo do ImageField
+            path_.open('rb')  # abre o arquivo
+            img_data = path_.read()
+            path_.close()
+        else:
+            raise TypeError("Tipo de imagem não suportado")
+
+        image = MIMEImage(img_data)
+        image.add_header('Content-ID', cname)
+        return image
 
     @staticmethod
     def mark_task_complete(ids_to_update):

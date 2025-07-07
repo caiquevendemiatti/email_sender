@@ -3,6 +3,8 @@ import logging
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from django.db.models import BooleanField
+from django import forms
+
 
 
 # Create your models here.
@@ -37,15 +39,26 @@ class Contato(models.Model):
 
 class ConteudoEmail(models.Model):
     assunto = models.CharField(max_length=255, blank=False, null=False)
-    cabecalho = models.CharField(max_length=255, blank=False, null=False)
-    rodape = models.CharField(max_length=255, blank=False, null=False)
-    titulo = models.CharField(max_length=500, blank=False, null=False, default="'")
+    titulo = models.CharField(max_length=500, blank=False, null=False, default="")
     conteudo_A = models.TextField(blank=False, null=False)
     conteudo_B = models.TextField(blank=True, null=True)
+    pre_imagens = models.CharField(max_length=500, blank=True, null=True)
+    foto_a = models.ImageField(upload_to='templates/images', blank=True, null=True)
+    foto_b = models.ImageField(upload_to='templates/images', blank=True, null=True)
+    foto_c = models.ImageField(upload_to='templates/images', blank=True, null=True)
+    foto_d = models.ImageField(upload_to='templates/images', blank=True, null=True)
+    foto_e = models.ImageField(upload_to='templates/images', blank=True, null=True)
+    foto_f = models.ImageField(upload_to='templates/images', blank=True, null=True)
 
     def __str__(self):
         return str(f"{self.assunto}")
 
+
+class ConteudoEmailForm(forms.ModelForm):
+    class Meta:
+        model = ConteudoEmail
+        fields = ['assunto','titulo', 'conteudo_A', 'conteudo_B', 'pre_imagens',
+                  'foto_a', 'foto_b', 'foto_c', 'foto_d', 'foto_e', 'foto_f']
 
 class GeradorTarefas(models.Model):
     todos_contatos = models.BooleanField(default=False, null=False, blank=False)
