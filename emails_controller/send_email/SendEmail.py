@@ -88,9 +88,11 @@ class SendEmail:
     def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email, vendor_id):
         self.logger.debug(f"Send Email Function - Receivers Count {self.receivers_count}")
         from_email = settings.EMAIL_HOST_USER
+        tipo_email = conteudo_email.tipo_email
         link_wa = f'https://wa.me/55{ddd}{whatsapp}'
         format_phone = f'({ddd}) {whatsapp[0:5]}-{whatsapp[5:]}'
         subject = conteudo_email.assunto
+
 
         add_content = {'conteudo_titulo': conteudo_email.titulo,
                        'conteudo_texto_A': conteudo_email.conteudo_A,
@@ -103,8 +105,12 @@ class SendEmail:
                        'link_cancel_inscr': 'http://marketing.hidrotube.com.br/cancelar_inscricao',
                        }
 
-        html_content = render_to_string('template_std_6_img.html', add_content)
-
+        if tipo_email == '6_fotos':
+            html_content = render_to_string('template_std_6_img.html', add_content)
+        elif tipo_email == 'sem_foto':
+            html_content = render_to_string('template_sem_foto.html', add_content)
+        else:
+            raise Exception
 
         message = EmailMultiAlternatives(subject, "",
                                          from_email=f"Hidrotube - Marketing <{from_email}>",
@@ -113,13 +119,14 @@ class SendEmail:
         message.attach_alternative(html_content, "text/html")
 
         message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
-
-        message.attach(self.img_data(conteudo_email.foto_a, '<image1>'))
-        message.attach(self.img_data(conteudo_email.foto_b, '<image2>'))
-        message.attach(self.img_data(conteudo_email.foto_c, '<image3>'))
-        message.attach(self.img_data(conteudo_email.foto_d, '<image4>'))
-        message.attach(self.img_data(conteudo_email.foto_e, '<image5>'))
-        message.attach(self.img_data(conteudo_email.foto_f, '<image6>'))
+        
+        if tipo_email == '6_fotos':
+            message.attach(self.img_data(conteudo_email.foto_a, '<image1>'))
+            message.attach(self.img_data(conteudo_email.foto_b, '<image2>'))
+            message.attach(self.img_data(conteudo_email.foto_c, '<image3>'))
+            message.attach(self.img_data(conteudo_email.foto_d, '<image4>'))
+            message.attach(self.img_data(conteudo_email.foto_e, '<image5>'))
+            message.attach(self.img_data(conteudo_email.foto_f, '<image6>'))
 
         message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
         message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))

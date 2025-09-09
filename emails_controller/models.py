@@ -38,6 +38,9 @@ class Contato(models.Model):
 
 
 class ConteudoEmail(models.Model):
+    TIPO_EMAIL_CHOICES = (('6_fotos', '6 Fotos'),
+                          ('sem_foto', 'Sem Fotos'),)
+    tipo_email = models.CharField(max_length=10, choices=TIPO_EMAIL_CHOICES, default='6_fotos')
     assunto = models.CharField(max_length=255, blank=False, null=False)
     titulo = models.CharField(max_length=500, blank=False, null=False, default="")
     conteudo_A = models.TextField(blank=False, null=False)
