@@ -109,6 +109,8 @@ class SendEmail:
             html_content = render_to_string('template_std_6_img.html', add_content)
         elif tipo_email == 'sem_foto':
             html_content = render_to_string('template_sem_foto.html', add_content)
+        elif tipo_email == 'apresentacao':
+            html_content = render_to_string('template_apresentacao.html', add_content)
         else:
             raise Exception
 
@@ -120,13 +122,19 @@ class SendEmail:
 
         message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
         
-        if tipo_email == '6_fotos':
-            message.attach(self.img_data(conteudo_email.foto_a, '<image1>'))
-            message.attach(self.img_data(conteudo_email.foto_b, '<image2>'))
-            message.attach(self.img_data(conteudo_email.foto_c, '<image3>'))
-            message.attach(self.img_data(conteudo_email.foto_d, '<image4>'))
-            message.attach(self.img_data(conteudo_email.foto_e, '<image5>'))
-            message.attach(self.img_data(conteudo_email.foto_f, '<image6>'))
+        if tipo_email in ('6_fotos', 'apresentacao'):
+            fotos = [
+                (conteudo_email.foto_a, '<image1>'),
+                (conteudo_email.foto_b, '<image2>'),
+                (conteudo_email.foto_c, '<image3>'),
+                (conteudo_email.foto_d, '<image4>'),
+                (conteudo_email.foto_e, '<image5>'),
+                (conteudo_email.foto_f, '<image6>'),
+            ]
+            for foto, cid in fotos:
+                img = self.img_data(foto, cid)
+                if img:
+                    message.attach(img)
 
         message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
         message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))
@@ -163,8 +171,9 @@ class SendEmail:
             with open(path, 'rb') as f:
                 img_data = f.read()
         elif isinstance(path_, ImageFieldFile):
-            # Objeto vindo do ImageField
-            path_.open('rb')  # abre o arquivo
+            if not path_:
+                return None
+            path_.open('rb')
             img_data = path_.read()
             path_.close()
         else:
