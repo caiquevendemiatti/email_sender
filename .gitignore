@@ -116,6 +116,10 @@ Pipfile
 .mypy_cache/
 
 /staticfiles/
+templates/images/
+static/*.png
+static/*.jpg
+static/*.jpeg
 /Pipfile.lock
 /.idea/*
 ../debug-admin-mesh.log
