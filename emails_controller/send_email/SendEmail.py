@@ -98,6 +98,7 @@ class SendEmail:
                        'conteudo_texto_A': conteudo_email.conteudo_A,
                        'conteudo_texto_B': conteudo_email.conteudo_B,
                        'pre_imagens': conteudo_email.pre_imagens,
+                       'preheader': conteudo_email.preheader,
                        'vendor_name': vendor_name,
                        'vendor_email': vendor_email,
                        'link_wa': link_wa,
@@ -111,6 +112,10 @@ class SendEmail:
             html_content = render_to_string('template_sem_foto.html', add_content)
         elif tipo_email == 'apresentacao':
             html_content = render_to_string('template_apresentacao.html', add_content)
+        elif tipo_email == 'padrao_a_4':
+            html_content = render_to_string('template_padrao_a_4.html', add_content)
+        elif tipo_email == 'padrao_a_6':
+            html_content = render_to_string('template_padrao_a_6.html', add_content)
         else:
             raise Exception
 
@@ -122,7 +127,7 @@ class SendEmail:
 
         message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
         
-        if tipo_email in ('6_fotos', 'apresentacao'):
+        if tipo_email in ('6_fotos', 'apresentacao', 'padrao_a_6'):
             fotos = [
                 (conteudo_email.foto_a, '<image1>'),
                 (conteudo_email.foto_b, '<image2>'),
@@ -130,6 +135,17 @@ class SendEmail:
                 (conteudo_email.foto_d, '<image4>'),
                 (conteudo_email.foto_e, '<image5>'),
                 (conteudo_email.foto_f, '<image6>'),
+            ]
+            for foto, cid in fotos:
+                img = self.img_data(foto, cid)
+                if img:
+                    message.attach(img)
+        elif tipo_email == 'padrao_a_4':
+            fotos = [
+                (conteudo_email.foto_a, '<image1>'),
+                (conteudo_email.foto_b, '<image2>'),
+                (conteudo_email.foto_c, '<image3>'),
+                (conteudo_email.foto_d, '<image4>'),
             ]
             for foto, cid in fotos:
                 img = self.img_data(foto, cid)
