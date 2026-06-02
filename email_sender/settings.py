@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'shell_plus',
     'corsheaders',
     'rest_framework',
-    'django_q',
+    'django_celery_beat',
     'emails_controller'
 ]
 
@@ -165,7 +165,7 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['file'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'propagate': True,
         },
         'emails_controller': {
@@ -183,23 +183,10 @@ REST_FRAMEWORK = {
 }
 
 
-Q_CLUSTER = {
-    'name': 'email_sender',
-    'workers': 8,
-    'recycle': 500,
-    'retry': 900,
-    'timeout': 900,
-    'max_attempts': 1,
-    'compress': True,
-    'cpu_affinity': 1,
-    'save_limit': 100,
-    'queue_limit': 500,
-    'label': 'Django Q',
-    'redis': {
-        'host': config('REDIS_HOST'),
-        'port': config('REDIS_PORT'),
-        'db': 0, }
-}
+CELERY_BROKER_URL = f"redis://{config('REDIS_HOST')}:{config('REDIS_PORT')}/0"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = config('EMAIL_HOST')

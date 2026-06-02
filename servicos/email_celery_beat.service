@@ -1,0 +1,16 @@
+[Unit]
+Description=Email Sender Celery Beat Scheduler
+After=network.target
+
+[Service]
+Type=simple
+User=iot_server
+Group=www-data
+WorkingDirectory=/home/iot_server/email_sender
+ExecStart=/home/iot_server/email_sender/venv/bin/celery -A email_sender beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+Restart=always
+RestartSec=10
+UMask=007
+
+[Install]
+WantedBy=multi-user.target

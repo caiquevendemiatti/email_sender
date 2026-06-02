@@ -1,0 +1,15 @@
+[Unit]
+Description=Email Sender Celery Worker
+After=network.target
+
+[Service]
+User=iot_server
+Group=www-data
+WorkingDirectory=/home/iot_server/email_sender
+ExecStart=/home/iot_server/email_sender/venv/bin/celery -A email_sender worker -l info -n worker1@%h
+UMask=007
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

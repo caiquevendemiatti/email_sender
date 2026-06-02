@@ -91,6 +91,7 @@ class GeradorTarefas(models.Model):
     conteudo_email = models.ForeignKey(ConteudoEmail, on_delete=models.PROTECT)
     tarefas_criadas = models.BooleanField(default=False, null=False, blank=False)
     pesquisa_satisfacao = models.BooleanField(default=False, null=False, blank=False, verbose_name='Pesquisa de Satisfação')
+    data_hora_agendamento = models.DateTimeField(null=True, blank=True, verbose_name='Agendamento')
 
     def clean(self):
         if not self.todos_contatos and not self.por_vendedor and not self.por_contato:
@@ -154,7 +155,8 @@ class GeradorTarefas(models.Model):
                 assunto=self.conteudo_email.assunto,
                 contato=contact,
                 conteudo=self.conteudo_email,
-                enviado=False
+                enviado=False,
+                data_hora_agendamento=self.data_hora_agendamento,
             )
             task_envio.save()
 
@@ -169,7 +171,8 @@ class GeradorTarefas(models.Model):
                 assunto=self.conteudo_email.assunto,
                 contato=contact,
                 conteudo=self.conteudo_email,
-                enviado=False
+                enviado=False,
+                data_hora_agendamento=self.data_hora_agendamento,
             )
             task_envio.save()
 
@@ -184,7 +187,8 @@ class GeradorTarefas(models.Model):
             assunto=self.conteudo_email.assunto,
             contato=contact,
             conteudo=self.conteudo_email,
-            enviado=False
+            enviado=False,
+            data_hora_agendamento=self.data_hora_agendamento,
         )
         task_envio.save()
 
@@ -195,7 +199,9 @@ class Task_Envio(models.Model):
     contato = models.ForeignKey(Contato, on_delete=models.CASCADE)
     enviado = models.BooleanField(default=False)
     tentativas_envio = models.IntegerField(default=0)
+    data_hora_agendamento = models.DateTimeField(null=True, blank=True, verbose_name='Agendamento')
     conteudo = models.ForeignKey(ConteudoEmail, on_delete=models.CASCADE, null=True, blank=True)
+    contato_desativado = models.BooleanField(default=False, null=False, blank=False)
 
     def __str__(self):
         return str(f"Tarefa: {self.tarefa} - Assunto: {self.assunto}")

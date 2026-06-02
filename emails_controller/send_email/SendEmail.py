@@ -9,6 +9,8 @@ from smtplib import SMTPException
 import time
 import logging
 import os
+from django.utils import timezone
+from django.db.models import Q
 from django.contrib.staticfiles import finders
 from functools import lru_cache
 
@@ -46,13 +48,34 @@ class SendEmail:
         if select_task_max_len <= 0:
             return
 
-        tasks = Task_Envio.objects.filter(enviado=False,
-                                          contato__colaborador_responsavel=vendor,
-                                          tentativas_envio__lt=2)[:select_task_max_len]
+        agora = timezone.now()
+
+        tasks = Task_Envio.objects.filter(
+            enviado=False,
+            contato__colaborador_responsavel=vendor,
+            tentativas_envio__lt=2,
+        ).filter(
+            Q(data_hora_agendamento__isnull=True) |
+            Q(data_hora_agendamento__lte=agora)
+        )[:select_task_max_len]
         to = []
         pk = []
         to_counter = 0
         tasks_len = len(tasks)
+
+        if tasks_len == 0:
+            proxima = Task_Envio.objects.filter(
+                enviado=False,
+                contato__colaborador_responsavel=vendor,
+                tentativas_envio__lt=2,
+                data_hora_agendamento__gt=agora,
+            ).order_by('data_hora_agendamento').values_list('data_hora_agendamento', flat=True).first()
+
+            if proxima:
+                self.logger.debug(f"[{vendor_name}] Nenhuma task pendente agora. Próxima agendada para: {proxima.strftime('%d/%m/%Y %H:%M')}")
+            else:
+                self.logger.debug(f"[{vendor_name}] Nenhuma task pendente.")
+            return
 
         if tasks_len < max_receivers_by_message:
             max_receivers_by_message = tasks_len
@@ -171,13 +194,27 @@ class SendEmail:
         return False
 
     def deactivate_error_email(self):
-        tasks = Task_Envio.objects.filter(enviado=False, tentativas_envio__gte=2)
+        tasks = Task_Envio.objects.filter(
+            enviado=False,
+            tentativas_envio__gte=2,
+            contato__ativo=True,
+            contato_desativado=False,
+        )
 
+        contatos_desativados = set()
         for task in tasks:
             contato = task.contato
-            self.logger.debug(f"Desativando contato: {contato.razao_social}")
-            contato.ativo = False
-            contato.save()
+            if contato.pk not in contatos_desativados:
+                contatos_desativados.add(contato.pk)
+                self.logger.debug(f"Desativando contato: {contato.razao_social}")
+                contato.ativo = False
+                contato.save()
+
+            Task_Envio.objects.filter(
+                contato=contato,
+                enviado=False,
+                tentativas_envio__gte=2,
+            ).update(contato_desativado=True)
 
     @staticmethod
     def img_data(path_, cname):

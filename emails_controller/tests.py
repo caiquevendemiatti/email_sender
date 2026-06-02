@@ -1,9 +1,11 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 from unittest.mock import MagicMock, patch, PropertyMock
 from django.db.models.fields.files import ImageFieldFile
+from datetime import timedelta
 
-from emails_controller.models import ConteudoEmail, Colaborador, Contato
+from emails_controller.models import ConteudoEmail, Colaborador, Contato, Task_Envio
 from emails_controller.send_email.SendEmail import SendEmail
 
 
@@ -117,3 +119,74 @@ class SendEmailTemplateRoutingTest(TestCase):
         fotos = [make_fake_image() for _ in range(6)]
         template = self._send('apresentacao', fotos)
         self.assertEqual(template, 'template_apresentacao.html')
+
+
+class AgendamentoTaskEnvioTest(TestCase):
+
+    def setUp(self):
+        self.colaborador = Colaborador.objects.create(
+            nome='Vendedor Teste',
+            e_mail='vendedor@teste.com',
+            ddd='19',
+            whatsapp='999999999',
+        )
+        self.contato = Contato.objects.create(
+            razao_social='Empresa Teste',
+            contato='Fulano',
+            e_mail='contato@teste.com',
+            ativo=True,
+            excluido=False,
+            colaborador_responsavel=self.colaborador,
+        )
+        conteudo = ConteudoEmail.objects.create(
+            tipo_email='sem_foto',
+            assunto='Teste',
+            titulo='Título',
+            conteudo_A='Texto A',
+        )
+        self.conteudo = conteudo
+
+    def _make_task(self, agendamento=None):
+        return Task_Envio.objects.create(
+            tarefa='1',
+            assunto='Teste',
+            contato=self.contato,
+            conteudo=self.conteudo,
+            enviado=False,
+            data_hora_agendamento=agendamento,
+        )
+
+    def test_task_sem_agendamento_e_selecionada(self):
+        self._make_task(agendamento=None)
+        tasks = Task_Envio.objects.filter(
+            enviado=False,
+            contato__colaborador_responsavel=self.colaborador,
+        ).filter(
+            __import__('django.db.models', fromlist=['Q']).Q(data_hora_agendamento__isnull=True) |
+            __import__('django.db.models', fromlist=['Q']).Q(data_hora_agendamento__lte=timezone.now())
+        )
+        self.assertEqual(tasks.count(), 1)
+
+    def test_task_agendada_no_passado_e_selecionada(self):
+        self._make_task(agendamento=timezone.now() - timedelta(hours=1))
+        from django.db.models import Q
+        tasks = Task_Envio.objects.filter(
+            enviado=False,
+            contato__colaborador_responsavel=self.colaborador,
+        ).filter(
+            Q(data_hora_agendamento__isnull=True) |
+            Q(data_hora_agendamento__lte=timezone.now())
+        )
+        self.assertEqual(tasks.count(), 1)
+
+    def test_task_agendada_no_futuro_nao_e_selecionada(self):
+        self._make_task(agendamento=timezone.now() + timedelta(hours=2))
+        from django.db.models import Q
+        tasks = Task_Envio.objects.filter(
+            enviado=False,
+            contato__colaborador_responsavel=self.colaborador,
+        ).filter(
+            Q(data_hora_agendamento__isnull=True) |
+            Q(data_hora_agendamento__lte=timezone.now())
+        )
+        self.assertEqual(tasks.count(), 0)
