@@ -54,6 +54,7 @@ a[x-apple-data-detectors] {
 @media screen and (max-width:384px) {.mail-message-content { width:414px!important } }</style>
  </head>
  <body style="width:100%;font-family:arial, 'helvetica neue', helvetica, sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;padding:0;Margin:0">
+  {% if preheader %}<div style="display:none;font-size:1px;color:#f6f6f6;line-height:1px;max-height:0px;max-width:0px;opacity:0;overflow:hidden;">{{preheader}}</div>{% endif %}
   <div dir="ltr" class="es-wrapper-color" lang="pt" style="background-color:#F6F6F6"><!--[if gte mso 9]>
 			<v:background xmlns:v="urn:schemas-microsoft-com:vml" fill="t">
 				<v:fill type="tile" color="#f6f6f6"></v:fill>
@@ -159,7 +160,7 @@ a[x-apple-data-detectors] {
                   <td class="h" align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image1" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="240"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image1" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="240"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -169,7 +170,7 @@ a[x-apple-data-detectors] {
                   <td align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image2" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="240"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image2" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="240"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -182,7 +183,7 @@ a[x-apple-data-detectors] {
                   <td class="h" align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image3" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image3" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -192,7 +193,7 @@ a[x-apple-data-detectors] {
                   <td align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image4" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image4" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -205,7 +206,7 @@ a[x-apple-data-detectors] {
                   <td class="h" align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image5" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image5" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
                      </tr>
                    </table></td>
                  </tr>
@@ -215,7 +216,7 @@ a[x-apple-data-detectors] {
                   <td align="left" style="padding:0;Margin:0;width:360px">
                    <table cellpadding="0" cellspacing="0" width="100%" role="presentation" style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                      <tr>
-                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image6" alt="" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
+                      <td align="center" style="padding:0;Margin:0;font-size:0px"><img class="adapt-img" src="cid:image6" alt="{{pre_imagens}}" style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic" width="360" height="271"></td>
                      </tr>
                    </table></td>
                  </tr>

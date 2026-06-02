@@ -40,19 +40,37 @@ class Contato(models.Model):
 class ConteudoEmail(models.Model):
     TIPO_EMAIL_CHOICES = (('6_fotos', '6 Fotos'),
                           ('sem_foto', 'Sem Fotos'),
-                          ('apresentacao', 'Apresentação'),)
+                          ('apresentacao', 'Apresentação'),
+                          ('padrao_a_4', 'Padrão A - 4 Fotos'),
+                          ('padrao_a_6', 'Padrão A - 6 Fotos'),)
     tipo_email = models.CharField(max_length=20, choices=TIPO_EMAIL_CHOICES, default='6_fotos')
     assunto = models.CharField(max_length=255, blank=False, null=False)
     titulo = models.CharField(max_length=500, blank=False, null=False, default="")
     conteudo_A = models.TextField(blank=False, null=False)
     conteudo_B = models.TextField(blank=True, null=True)
     pre_imagens = models.CharField(max_length=500, blank=True, null=True)
+    preheader = models.CharField(max_length=255, blank=True, null=True, verbose_name='Texto de preview (preheader)')
     foto_a = models.ImageField(upload_to='templates/images', blank=True, null=True)
     foto_b = models.ImageField(upload_to='templates/images', blank=True, null=True)
     foto_c = models.ImageField(upload_to='templates/images', blank=True, null=True)
     foto_d = models.ImageField(upload_to='templates/images', blank=True, null=True)
     foto_e = models.ImageField(upload_to='templates/images', blank=True, null=True)
     foto_f = models.ImageField(upload_to='templates/images', blank=True, null=True)
+
+    def clean(self):
+        fotos = [self.foto_a, self.foto_b, self.foto_c, self.foto_d, self.foto_e, self.foto_f]
+        fotos_preenchidas = sum(1 for f in fotos if f)
+
+        if self.tipo_email == 'padrao_a_4':
+            fotos_obrigatorias = [self.foto_a, self.foto_b, self.foto_c, self.foto_d]
+            faltando = sum(1 for f in fotos_obrigatorias if not f)
+            if faltando:
+                raise ValidationError(_('Padrão A - 4 Fotos requer que foto A, B, C e D sejam preenchidas.'))
+
+        elif self.tipo_email == 'padrao_a_6':
+            faltando = sum(1 for f in fotos if not f)
+            if faltando:
+                raise ValidationError(_('Padrão A - 6 Fotos requer que todas as 6 fotos (A a F) sejam preenchidas.'))
 
     def __str__(self):
         return str(f"{self.assunto}")
