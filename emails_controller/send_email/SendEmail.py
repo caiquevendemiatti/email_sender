@@ -42,7 +42,6 @@ class SendEmail:
         whatsapp = vendor.whatsapp
         ddd = vendor.ddd
 
-        max_receivers_by_message = self.receivers_block_limit
         select_task_max_len = self.receivers_limit_hour - self.receivers_count
 
         if select_task_max_len <= 0:
@@ -50,20 +49,16 @@ class SendEmail:
 
         agora = timezone.now()
 
-        tasks = Task_Envio.objects.filter(
+        tasks = list(Task_Envio.objects.filter(
             enviado=False,
             contato__colaborador_responsavel=vendor,
             tentativas_envio__lt=2,
         ).filter(
             Q(data_hora_agendamento__isnull=True) |
             Q(data_hora_agendamento__lte=agora)
-        )[:select_task_max_len]
-        to = []
-        pk = []
-        to_counter = 0
-        tasks_len = len(tasks)
+        ).order_by('conteudo')[:select_task_max_len])
 
-        if tasks_len == 0:
+        if not tasks:
             proxima = Task_Envio.objects.filter(
                 enviado=False,
                 contato__colaborador_responsavel=vendor,
@@ -77,36 +72,45 @@ class SendEmail:
                 self.logger.debug(f"[{vendor_name}] Nenhuma task pendente.")
             return
 
-        if tasks_len < max_receivers_by_message:
-            max_receivers_by_message = tasks_len
+        to = []
+        pk = []
+        current_conteudo = None
+        current_conteudo_id = None
+
+        def flush_batch():
+            if not to:
+                return
+            self.logger.debug(f"Enviando para: {to} - Whatsapp: {whatsapp}")
+            success = self.send_email(to, current_conteudo, ddd, whatsapp, vendor_name, vendor_email, vendor_id)
+            if success:
+                self.logger.debug("Sucess sending")
+                self.mark_task_complete(pk)
+            else:
+                self.logger.debug("Error sending")
+                self.mark_task_error(pk)
 
         for task in tasks:
-            self.receivers_count = self.receivers_count + 1
-            to_counter = to_counter + 1
+            # Flush accumulated batch when content changes
+            if current_conteudo_id is not None and task.conteudo_id != current_conteudo_id:
+                flush_batch()
+                to = []
+                pk = []
+
+            current_conteudo = task.conteudo
+            current_conteudo_id = task.conteudo_id
+            self.receivers_count += 1
             to.append(task.contato.e_mail)
             pk.append(task.pk)
 
-            # When reached the number of contacts for a single e-mail proceed email send task
-            if to_counter == max_receivers_by_message:
-                conteudo = task.conteudo
-                self.logger.debug(f"Enviando para:  {to} - Whatsapp: {whatsapp}")
-                success = self.send_email(to, conteudo, ddd, whatsapp, vendor_name, vendor_email, vendor.pk)
-
-                if success:
-                    self.logger.debug("Sucess sending")
-                    self.mark_task_complete(pk)
-                else:
-                    self.logger.debug("Error sending")
-                    self.mark_task_error(pk)
-
-                # If the number of pending contacts is less than email max receivers by e-mail,
-                # reduce e-mail receivers number
-                if (tasks_len - to_counter) < max_receivers_by_message:
-                    max_receivers_by_message = (tasks_len - to_counter)
-
-                to_counter = 0
-                pk = []
+            # Flush when block limit reached
+            if len(to) == self.receivers_block_limit:
+                flush_batch()
                 to = []
+                pk = []
+                current_conteudo = None
+                current_conteudo_id = None
+
+        flush_batch()
 
     def send_email(self, to, conteudo_email, ddd, whatsapp, vendor_name, vendor_email, vendor_id):
         self.logger.debug(f"Send Email Function - Receivers Count {self.receivers_count}")
@@ -142,44 +146,44 @@ class SendEmail:
         else:
             raise Exception
 
-        message = EmailMultiAlternatives(subject, "",
-                                         from_email=f"Hidrotube - Marketing <{from_email}>",
-                                         bcc=to)
-
-        message.attach_alternative(html_content, "text/html")
-
-        message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
-        
-        if tipo_email in ('6_fotos', 'apresentacao', 'padrao_a_6'):
-            fotos = [
-                (conteudo_email.foto_a, '<image1>'),
-                (conteudo_email.foto_b, '<image2>'),
-                (conteudo_email.foto_c, '<image3>'),
-                (conteudo_email.foto_d, '<image4>'),
-                (conteudo_email.foto_e, '<image5>'),
-                (conteudo_email.foto_f, '<image6>'),
-            ]
-            for foto, cid in fotos:
-                img = self.img_data(foto, cid)
-                if img:
-                    message.attach(img)
-        elif tipo_email == 'padrao_a_4':
-            fotos = [
-                (conteudo_email.foto_a, '<image1>'),
-                (conteudo_email.foto_b, '<image2>'),
-                (conteudo_email.foto_c, '<image3>'),
-                (conteudo_email.foto_d, '<image4>'),
-            ]
-            for foto, cid in fotos:
-                img = self.img_data(foto, cid)
-                if img:
-                    message.attach(img)
-
-        message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
-        message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))
-        message.attach(self.img_data('templates/images/linkedin_logo_white.png', '<linkedin_logo>'))
-
         try:
+            message = EmailMultiAlternatives(subject, "",
+                                             from_email=f"Hidrotube - Marketing <{from_email}>",
+                                             bcc=to)
+
+            message.attach_alternative(html_content, "text/html")
+
+            message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
+
+            if tipo_email in ('6_fotos', 'apresentacao', 'padrao_a_6'):
+                fotos = [
+                    (conteudo_email.foto_a, '<image1>'),
+                    (conteudo_email.foto_b, '<image2>'),
+                    (conteudo_email.foto_c, '<image3>'),
+                    (conteudo_email.foto_d, '<image4>'),
+                    (conteudo_email.foto_e, '<image5>'),
+                    (conteudo_email.foto_f, '<image6>'),
+                ]
+                for foto, cid in fotos:
+                    img = self.img_data(foto, cid)
+                    if img:
+                        message.attach(img)
+            elif tipo_email == 'padrao_a_4':
+                fotos = [
+                    (conteudo_email.foto_a, '<image1>'),
+                    (conteudo_email.foto_b, '<image2>'),
+                    (conteudo_email.foto_c, '<image3>'),
+                    (conteudo_email.foto_d, '<image4>'),
+                ]
+                for foto, cid in fotos:
+                    img = self.img_data(foto, cid)
+                    if img:
+                        message.attach(img)
+
+            message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
+            message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))
+            message.attach(self.img_data('templates/images/linkedin_logo_white.png', '<linkedin_logo>'))
+
             result = message.send()
 
             if result == 1:
@@ -187,11 +191,11 @@ class SendEmail:
 
             return False
         except SMTPException as e:
-            self.logger.debug('There was an error sending an email: ', e)
+            self.logger.debug(f'There was an error sending an email: {e}')
             return False
         except Exception as error:
             self.logger.debug(f"Unknown error sending email: {error}")
-        return False
+            return False
 
     def deactivate_error_email(self):
         tasks = Task_Envio.objects.filter(
@@ -218,21 +222,37 @@ class SendEmail:
 
     @staticmethod
     def img_data(path_, cname):
+        import mimetypes
+        logger = logging.getLogger(__name__)
+
         if isinstance(path_, str):
-            # Caminho absoluto vindo como string
-            path = os.path.join(settings.MEDIA_ROOT, path_)
-            with open(path, 'rb') as f:
+            filepath = os.path.join(settings.MEDIA_ROOT, path_)
+            with open(filepath, 'rb') as f:
                 img_data = f.read()
+            filename = filepath
         elif isinstance(path_, ImageFieldFile):
             if not path_:
                 return None
+            filename = path_.name
             path_.open('rb')
             img_data = path_.read()
             path_.close()
         else:
             raise TypeError("Tipo de imagem não suportado")
 
-        image = MIMEImage(img_data)
+        if not img_data:
+            logger.warning(f"Arquivo de imagem vazio: {filename}")
+            return None
+
+        mime_type, _ = mimetypes.guess_type(filename)
+        subtype = mime_type.split('/')[-1] if (mime_type and mime_type.startswith('image/')) else None
+
+        try:
+            image = MIMEImage(img_data, _subtype=subtype) if subtype else MIMEImage(img_data)
+        except TypeError:
+            logger.warning(f"Não foi possível determinar o tipo da imagem: {filename}")
+            return None
+
         image.add_header('Content-ID', cname)
         return image
 
