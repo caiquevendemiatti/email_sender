@@ -143,6 +143,10 @@ class SendEmail:
             html_content = render_to_string('template_padrao_a_4.html', add_content)
         elif tipo_email == 'padrao_a_6':
             html_content = render_to_string('template_padrao_a_6.html', add_content)
+        elif tipo_email == 'padrao_b_4':
+            html_content = render_to_string('template_padrao_b_4.html', add_content)
+        elif tipo_email == 'padrao_b_6':
+            html_content = render_to_string('template_padrao_b_6.html', add_content)
         else:
             raise Exception
 
@@ -155,7 +159,7 @@ class SendEmail:
 
             message.attach(self.img_data('templates/images/logo_ht.png', '<logo_ht>'))
 
-            if tipo_email in ('6_fotos', 'apresentacao', 'padrao_a_6'):
+            if tipo_email in ('6_fotos', 'apresentacao', 'padrao_a_6', 'padrao_b_6'):
                 fotos = [
                     (conteudo_email.foto_a, '<image1>'),
                     (conteudo_email.foto_b, '<image2>'),
@@ -168,7 +172,7 @@ class SendEmail:
                     img = self.img_data(foto, cid)
                     if img:
                         message.attach(img)
-            elif tipo_email == 'padrao_a_4':
+            elif tipo_email in ('padrao_a_4', 'padrao_b_4'):
                 fotos = [
                     (conteudo_email.foto_a, '<image1>'),
                     (conteudo_email.foto_b, '<image2>'),

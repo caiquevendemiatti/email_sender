@@ -42,7 +42,9 @@ class ConteudoEmail(models.Model):
                           ('sem_foto', 'Sem Fotos'),
                           ('apresentacao', 'Apresentação'),
                           ('padrao_a_4', 'Padrão A - 4 Fotos'),
-                          ('padrao_a_6', 'Padrão A - 6 Fotos'),)
+                          ('padrao_a_6', 'Padrão A - 6 Fotos'),
+                          ('padrao_b_4', 'Padrão B - 4 Fotos'),
+                          ('padrao_b_6', 'Padrão B - 6 Fotos'),)
     tipo_email = models.CharField(max_length=20, choices=TIPO_EMAIL_CHOICES, default='6_fotos')
     assunto = models.CharField(max_length=255, blank=False, null=False)
     titulo = models.CharField(max_length=500, blank=False, null=False, default="")
@@ -71,6 +73,17 @@ class ConteudoEmail(models.Model):
             faltando = sum(1 for f in fotos if not f)
             if faltando:
                 raise ValidationError(_('Padrão A - 6 Fotos requer que todas as 6 fotos (A a F) sejam preenchidas.'))
+
+        elif self.tipo_email == 'padrao_b_4':
+            fotos_obrigatorias = [self.foto_a, self.foto_b, self.foto_c, self.foto_d]
+            faltando = sum(1 for f in fotos_obrigatorias if not f)
+            if faltando:
+                raise ValidationError(_('Padrão B - 4 Fotos requer que foto A, B, C e D sejam preenchidas.'))
+
+        elif self.tipo_email == 'padrao_b_6':
+            faltando = sum(1 for f in fotos if not f)
+            if faltando:
+                raise ValidationError(_('Padrão B - 6 Fotos requer que todas as 6 fotos (A a F) sejam preenchidas.'))
 
     def __str__(self):
         return str(f"{self.assunto}")
