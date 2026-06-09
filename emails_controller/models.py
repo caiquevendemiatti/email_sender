@@ -206,6 +206,27 @@ class GeradorTarefas(models.Model):
         task_envio.save()
 
 
+class ImportacaoContatos(models.Model):
+    STATUS_CHOICES = [
+        ('pendente', 'Pendente'),
+        ('sucesso', 'Sucesso'),
+        ('parcial', 'Parcial (com erros)'),
+        ('erro', 'Erro'),
+    ]
+    arquivo = models.FileField(upload_to='importacoes/', verbose_name='Planilha Excel')
+    simulacao = models.BooleanField(default=False, verbose_name='Simulação (não salva alterações)')
+    data_importacao = models.DateTimeField(auto_now_add=True, verbose_name='Data/Hora')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pendente')
+    resultado = models.TextField(blank=True, null=True, verbose_name='Resultado')
+
+    class Meta:
+        verbose_name = 'Importação de Contatos'
+        verbose_name_plural = 'Importações de Contatos'
+
+    def __str__(self):
+        return f'Importação {self.data_importacao.strftime("%d/%m/%Y %H:%M") if self.data_importacao else ""}'
+
+
 class Task_Envio(models.Model):
     tarefa = models.CharField(max_length=255, blank=False, null=False)
     assunto = models.CharField(max_length=255, blank=False, null=False)
