@@ -147,6 +147,8 @@ class SendEmail:
             html_content = render_to_string('template_padrao_b_4.html', add_content)
         elif tipo_email == 'padrao_b_6':
             html_content = render_to_string('template_padrao_b_6.html', add_content)
+        elif tipo_email == 'alerta_fraude_boleto':
+            html_content = render_to_string('template_alerta_fraude_boleto.html', add_content)
         else:
             raise Exception
 
@@ -183,6 +185,10 @@ class SendEmail:
                     img = self.img_data(foto, cid)
                     if img:
                         message.attach(img)
+            elif tipo_email == 'alerta_fraude_boleto':
+                img = self.img_data(conteudo_email.foto_a, '<image1>')
+                if img:
+                    message.attach(img)
 
             message.attach(self.img_data('templates/images/facebook_logo_white.png', '<facebook_logo>'))
             message.attach(self.img_data('templates/images/instagram_logo_white.png', '<instagram_logo>'))
